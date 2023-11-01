@@ -1,6 +1,11 @@
 import cv2
 import numpy as np
 
+#  TODO get color detection working
+
+def test_function():
+    print("Hello from part1.py")
+
 def is_color(hsv_color, lower, upper):
     mask = cv2.inRange(hsv_color, lower, upper)
     return cv2.countNonZero(mask) > 0
@@ -61,7 +66,7 @@ def find_ball_center(img):
 
     cv2.imshow("Detected Circles", img)
 
-def get_ball_center_coords(img, min_r, max_r):
+def get_ball_center_coords(img, min_r, max_r,show):
     # Convert the image to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     blur_matrix = 3
@@ -89,8 +94,9 @@ def get_ball_center_coords(img, min_r, max_r):
             cv2.circle(img, center, radius, (0, 255, 0), 2)
             cv2.circle(img, center, 1, (0, 0, 255), 3)
             circle_info.append((center, radius))
+            if(show): print("                  circle detected")
 
-    cv2.imshow("Detected Circles", img)
+    if(show): cv2.imshow("Detected Circles", img)
     
     return circle_info
 
@@ -108,8 +114,8 @@ def iterate_through_ball_images():
 
 # iterate_through_ball_images()
 # find_center_handler(5)
-image = cv2.imread("balls/Ball1.jpg")
-circle = get_ball_center_coords(image,10,100)
-print(circle)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+# image = cv2.imread("balls/Ball1.jpg")
+# circle = get_ball_center_coords(image,10,100)
+# print(circle)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()

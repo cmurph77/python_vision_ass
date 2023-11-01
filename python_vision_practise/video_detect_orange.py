@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from numpy import True_
-import part1
+# import part1
 
 # opt 1= orange_mask, 2= just mask
 def perform_orange_mask(img,opt):
