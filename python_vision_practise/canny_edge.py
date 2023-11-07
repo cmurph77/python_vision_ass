@@ -11,7 +11,18 @@ def create_white_mask(image):
     # Invert the binary image (optional, if you want white elements to be white)
     inverted_binary_image = cv2.bitwise_not(binary_image)
 
-    return binary_image  # Return the white elements mask
+    #Convert the input image to HSL
+    cv2.cvtColor(image, cv2.COLOR_BGR2HLS)
+
+    
+    #White color mask
+    lower_threshold = np.uint8([0, 200, 0])
+    upper_threshold = np.uint8([255, 255, 255])
+    white_mask = cv2.inRange(image, lower_threshold, upper_threshold)
+    
+
+
+    return white_mask # Return the white elements mask
 
 
 
@@ -22,12 +33,13 @@ image = cv2.imread(image_path)
 black_image = np.zeros((image.shape[0], image.shape[1], 3), dtype=np.uint8)
 
 
-white_mask = create_white_mask(image)
+height = image.shape[0]
+width = image.shape[1]
 
 # Convert the image to grayscale
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-cv2.imshow("gray image",gray)
+# cv2.imshow("gray image",gray)
 
 # Apply Canny edge detection
 edges = cv2.Canny(image, 150, 200, apertureSize=3)
@@ -38,14 +50,12 @@ contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
 # Draw the four largest contours on the image
 cv2.drawContours(black_image, contours, -1, (0, 255, 0), 3)
 
-height = image.shape[0]
-width = image.shape[1]
+cv2.imshow("white mask", create_white_mask(image))
 
 
 
 
 # Display the image
-cv2.imshow('Image with Four Largest Contours', black_image)
-
+# cv2.imshow('Image with Four Largest Contours', black_image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
