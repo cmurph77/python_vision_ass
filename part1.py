@@ -17,8 +17,6 @@ on the quality and characteristics of the input images."""
 import cv2
 import numpy as np
 
-#  TODO get color detection working
-
 
 def is_color(hsv_color, lower, upper):
     mask = cv2.inRange(hsv_color, lower, upper)
@@ -38,19 +36,15 @@ def is_color_white(hsv_color):
 
 
 def detect_color(img, x, y, r):
-    center = (int(x), int(y))
-    # cv2.circle(img, center, int(r), (0, 255, 0), 2)
-    # cv2.circle(img, center, 1, (0, 0, 255), 3)
+    center = (int(x), int(y)) # create a center object
 
     # Create a mask with the same dimensions as the input image but only one channel.
     mask = np.zeros(img.shape[:2], dtype=np.uint8)
 
     # Draw the circle on the mask with white color and filled (-1).
     cv2.circle(mask, center, int(r), (255), -1)
+    cv2.imshow("mask",mask)
 
-
-    # You can display the mask if you want to see it.
-    # cv2.imshow("color mask", mask)
 
     # Now calculate the mean color using the mask. The mask must be 8-bit single-channel.
     mean_color = cv2.mean(img, mask=mask)

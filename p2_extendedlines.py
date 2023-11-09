@@ -51,7 +51,7 @@ def extend_line(x1, y1, x2, y2, width, height):
 table_5_points = [(1224, 490), (2562, 555), (223, 2739), (3742, 2762)] # 1224	490	2562	555	223	2739	3742	2762
 
 # Read in the image
-image_path = 'tables/Table3.jpg'
+image_path = 'tables/Table5.jpg'
 img = cv2.imread(image_path)
 
 # Define the blue color range in HSV format
