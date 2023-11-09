@@ -3,15 +3,6 @@ import cv2
 from matplotlib import pyplot as plt
 import numpy as np
 
-"""//Part II. Locate the table tennis table.  You must now locate the corners of the table (the outside of the
-// white lines) using edge detection, and then transform the image so that you have a plan view of the table.
-// Determine how well your approach works on the static images of the tables provided. Ensure that you use
-// techniques which can be used in general (e.g. ideally the techniques would cope with changes in lighting, etc.).
-// Analyse how well your approach works on the static images of the tables provided, and later on the table tennis
-// video.  Note that in the report you may need to use some of the Learning and Evaluation section of the course,
-// also in section 9.3 of “Computer Vision with OpenCV”  (when reporting performance).
-"""
-
 # Function to extend a line segment to the image borders
 def extend_line(x1, y1, x2, y2, width, height):
     if x2 != x1:
@@ -48,11 +39,14 @@ def extend_line(x1, y1, x2, y2, width, height):
 
     return x_start, y_start, x_end, y_end
 
-table_5_points = [(1224, 490), (2562, 555), (223, 2739), (3742, 2762)] # 1224	490	2562	555	223	2739	3742	2762
+# table_5_points = [(1224, 490), (2562, 555), (223, 2739), (3742, 2762)] # 1224	490	2562	555	223	2739	3742	2762
 
 # Read in the image
 image_path = 'tables/Table3.jpg'
 img = cv2.imread(image_path)
+
+# ----------------------------------------------------------
+# CREATE A MASK FOR BLUE REGIONS (TABLE TOP COLOR) 
 
 # Define the blue color range in HSV format
 blue_lower = np.array([95, 20, 20])
@@ -69,13 +63,13 @@ mask = cv2.erode(mask, None, iterations=2)
 mask = cv2.dilate(mask, None, iterations=2)
 
 # Apply the mask to the original image
-blue_masked_image = cv2.bitwise_and(img, img, mask=mask)
+# blue_masked_image = cv2.bitwise_and(img, img, mask=mask)
 
-# cv2.imshow("blue mask", blue_masked_image)
 
 # ----------------------------------------------------------
-# Find contours
+# FIND CONTOURS IN THE MASK
 
+# Process the mask to join contours together
 mask = cv2.dilate(mask,None, iterations=10)
 mask = cv2.erode(mask,None, iterations=10)
 mask = cv2.dilate(mask,None, iterations=2)
@@ -171,9 +165,9 @@ for i in range(dst_dilated.shape[0]):
             corner_coordinates.append((j, i))  # Append as (x, y)
             cv2.circle(intersecting_lines_image, (j, i), 5, (255, 0, 0), -1)
 
-# Print out the coordinates of the corners
-for coord in corner_coordinates:
-    print("Corner detected at: x = {}, y = {}".format(coord[0], coord[1]))
+# # Print out the coordinates of the corners
+# for coord in corner_coordinates:
+#     print("Corner detected at: x = {}, y = {}".format(coord[0], coord[1]))
 
 cv2.imshow("Corners detected", intersecting_lines_image)
 
@@ -193,9 +187,9 @@ for x, y in corner_coordinates:
         filtered_border_coordinates.append((x, y))
 
 # Now 'filtered_corner_coordinates' contains corners that are not near the edges of the image
-# Let's print them out
-for coord in filtered_border_coordinates:
-    print("Filtered corner: x = {}, y = {}".format(coord[0], coord[1]))
+# # Let's print them out
+# for coord in filtered_border_coordinates:
+#     # print("Filtered corner: x = {}, y = {}".format(coord[0], coord[1]))
 
 # Draw the filtered corners on the image
 for x, y in filtered_border_coordinates:
@@ -231,10 +225,6 @@ for coord in filtered_border_coordinates:
     if far_enough:
         filtered_nearby_coordinates.append(coord)
 
-# Print the filtered coordinates
-for coord in filtered_nearby_coordinates:
-    print("Filtered coordinate: x = {}, y = {}".format(coord[0], coord[1]))
-
 print(filtered_nearby_coordinates)  # Return the list of filtered coordinates for further use
 
 # # ----------------------------------------------------------
@@ -247,8 +237,22 @@ for x, y in filtered_nearby_coordinates:
 for x, y in filtered_nearby_coordinates:
     cv2.circle(img, (x, y), 15, (0, 0, 255), -1)
 
-cv2.imshow("nearby filtered coords", nearby_filtered_corners)
+# cv2.imshow("nearby filtered coords", nearby_filtered_corners)
+
 cv2.imshow("oringal image with corners marked",img)
+
+#  ----------------------------------------------------------
+# Perform perspective transform
+# pts1 = np.float32(filtered_nearby_coordinates)
+# pts2 = np.float32([[0, 0], [500, 0], [0, 600], [500, 600]])
+# matrix = cv2.getPerspectiveTransform(pts1, pts2)
+# result = cv2.warpPerspective(img, matrix, (500, 600))
+
+# cv2.imshow("Image", img)
+# cv2.imshow("Perspective transformation", result)
+
+#  ----------------------------------------------------------
+
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
