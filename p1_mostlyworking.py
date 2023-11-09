@@ -1,51 +1,5 @@
-# this works on all but picture 10 and doesnt detect all 3 balls in picture 5
-""""
-
-Image No:  1
-BALL DETECTED
-      [((562, 310), 41)]
- 
-Image No:  2
-BALL DETECTED
-      [((432, 458), 68)]
- 
-Image No:  3
-BALL DETECTED
-      [((416, 406), 47)]
- 
-Image No:  4
-BALL DETECTED
-      [((364, 382), 57)]
- 
-Image No:  5
-BALL DETECTED
-      [((440, 362), 42)]
- 
-Image No:  6
-BALL DETECTED
-      [((384, 330), 48)]
- 
-Image No:  7
-BALL DETECTED
-      [((528, 282), 36)]
- 
-Image No:  8
-BALL DETECTED
-      [((524, 458), 30)]
- 
-Image No:  9
-BALL DETECTED
-      [((530, 404), 30)]
- 
-Image No:  10
-BALL DETECTED
-BALL DETECTED
-BALL DETECTED
-      [((90, 44), 41), ((140, 32), 31), ((186, 32), 24)]"""
 import cv2
 import numpy as np
-
-#  TODO get color detection working
 
 
 def is_color(hsv_color, lower, upper):
@@ -54,7 +8,7 @@ def is_color(hsv_color, lower, upper):
 
 
 def is_color_orange(hsv_color):
-    orange_lower = np.array([15, 100, 100])
+    orange_lower = np.array([10, 100, 100])
     orange_upper = np.array([35, 255, 255])
     return is_color(hsv_color, orange_lower, orange_upper)
 
@@ -67,8 +21,8 @@ def is_color_white(hsv_color):
 
 def detect_color(img, x, y, r):
     center = (int(x), int(y))
-    cv2.circle(img, center, int(r), (0, 255, 0), 2)
-    cv2.circle(img, center, 1, (0, 0, 255), 3)
+    # cv2.circle(img, center, int(r), (0, 255, 0), 2)
+    # cv2.circle(img, center, 1, (0, 0, 255), 3)
 
     # Create a mask with the same dimensions as the input image but only one channel.
     mask = np.zeros(img.shape[:2], dtype=np.uint8)
@@ -91,6 +45,7 @@ def detect_color(img, x, y, r):
 
 
 def get_ball_center_coords(img, show):
+
     # Convert the image to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     blur_matrix = 5
@@ -99,11 +54,9 @@ def get_ball_center_coords(img, show):
     # Parameters for the Hough circles method
     max_ball_radius = 200
     min_ball_radius = 10
-    # param_1 = 150
-    # param_2 = 65
-    param_1 = 90
+    param_1 = 90        
     param_2 = 40
-    min_dist = gray_blurred.shape[0] // 10  # Height/8
+    min_dist = gray_blurred.shape[0] // 10  # Height/ 10
 
     detected_circles = cv2.HoughCircles(gray_blurred, cv2.HOUGH_GRADIENT, 1, minRadius=min_ball_radius,
                                         maxRadius=max_ball_radius, param1=param_1, param2=param_2, minDist=min_dist)
@@ -120,12 +73,10 @@ def get_ball_center_coords(img, show):
             center = (x, y)
             radius = i[2]
             color = detect_color(img, x, y, radius)
-            # if is_color_orange(color): print("orange")
-            # if is_color_white(color): print("white")
             if is_color_orange(color) or is_color_white(color):
                 # print("Color is orange or white")
-                # cv2.circle(img, center, radius, (0, 255, 0), 2)
-                # cv2.circle(img, center, 1, (0, 0, 255), 3)
+                cv2.circle(img, center, radius, (0, 255, 0), 2)
+                cv2.circle(img, center, 1, (0, 0, 255), 3)
                 circle_info.append((center, radius))
 
 
@@ -150,9 +101,8 @@ def iterate_through_ball_images():
         find_center_handler(i)
 
 
-#
 iterate_through_ball_images()
-# find_center_handler(10)
+# find_center_handler(9)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
