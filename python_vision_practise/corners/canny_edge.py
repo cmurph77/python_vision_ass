@@ -25,11 +25,10 @@ def create_white_mask(image):
     return white_mask # Return the white elements mask
 
 
-
-
 # Load the image
-image_path = 'Tables/Table2.jpg'
+image_path = '/Users/cianmurphy/code_directories/computer_vision/python_vision_ass/balls/Ball10.jpg'
 image = cv2.imread(image_path)
+cv2.imshow("Original", image)
 black_image = np.zeros((image.shape[0], image.shape[1], 3), dtype=np.uint8)
 
 
@@ -47,10 +46,16 @@ edges = cv2.Canny(image, 150, 200, apertureSize=3)
 # Find contours
 contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-# Draw the four largest contours on the image
-cv2.drawContours(black_image, contours, -1, (0, 255, 0), 3)
+large_contours = []
+for contour in contours:
+    if cv2.contourArea(contour) > 50:  # Adjust the area threshold as needed
+        large_contours.append(contour)
 
-cv2.imshow("white mask", create_white_mask(image))
+# Draw the four largest contours on the image
+cv2.drawContours(black_image, large_contours, -1, (0, 255, 0), 3)
+
+cv2.imshow("black_image",black_image)
+# cv2.imshow("white mask", create_white_mask(image))
 
 
 

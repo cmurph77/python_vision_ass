@@ -1,11 +1,12 @@
 import cv2
 
 # Create a VideoCapture object to read from a video file or camera
-video_source = 'TableTennis.avi'  # Replace with your video source
+video_source = '../TableTennis.avi'  # Replace with your video source
 cap = cv2.VideoCapture(video_source)
 
 # Initialize the background subtractor with GMM
-bg_subtractor = cv2.createBackgroundSubtractorMOG2()
+bg_subtractor = cv2.createBackgroundSubtractorMOG2(detectShadows=False, history=20, varThreshold=30, )
+# bg_subtractor = cv2.createBackgroundSubtractorKNN()
 
 while True:
     ret, frame = cap.read()
@@ -14,6 +15,7 @@ while True:
 
     # Apply the background subtractor to get the foreground mask
     fg_mask = bg_subtractor.apply(frame)
+    cv2.imshow("fg mask", fg_mask)
 
     # Post-process the mask (optional)
     fg_mask = cv2.erode(fg_mask, None, iterations=2)
@@ -31,9 +33,8 @@ while True:
     # Display the original frame and the result
     cv2.imshow('Original Video', frame)
     og_masked_image = cv2.bitwise_and(frame, frame, mask=fg_mask)
-    cv2.imshow("og masked image",og_masked_image)
 
-    cv2.imshow('Foreground Mask', fg_mask)
+    # cv2.imshow('Foreground Mask', fg_mask)
 
     if cv2.waitKey(30) & 0xFF == 27:  # Press 'Esc' to exit
         break

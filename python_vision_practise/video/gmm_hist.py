@@ -33,48 +33,17 @@ def find_closest_histogram(image_hist, histogram_array):
     # return closest_index, min_distance
     return closest_index
 
-def is_player(contour_hist,p1_hist,p2_hist):
-    distance_p1 = cv2.compareHist(contour_hist, p1_hist, cv2.HISTCMP_BHATTACHARYYA)
-    distance_p2 = cv2.compareHist(contour_hist, p2_hist, cv2.HISTCMP_BHATTACHARYYA) 
-
-    min_distance = float(0.988)
-    if distance_p1 < min_distance or distance_p2 < min_distance:
-        print("distance",distance_p1)
-        return True
-    else:
-        return False
-
-def is_ball(contour_hist):
-    orange_ball_img = cv2.imread("balls/orange_ball.jpg")
-    ball_hist = get_hist(orange_ball_img)
-
-    min_distance = float(0.999)
-
-
-    distance = cv2.compareHist(contour_hist, ball_hist, cv2.HISTCMP_BHATTACHARYYA)
-    print("distance",distance)
-    if distance < min_distance:
-        return True
-    else: 
-        return False
-
+orange_ball_img = cv2.imread("../balls/orange_ball.jpg")
+ball_hist = get_hist(orange_ball_img)
 
 # Create a VideoCapture object to read from a video file or camera
 video_source = 'TableTennis.avi'  # Replace with your video source
 cap = cv2.VideoCapture(video_source)
 
-player_1 = cv2.imread("tables/p1_hist.jpg")
-p1_hist = get_hist(player_1)
-
-player_2 = cv2.imread("tables/p2_hist.jpg")
-p2_hist = get_hist(player_2)
-
 # Initialize the background subtractor with GMM
-bg_subtractor = cv2.createBackgroundSubtractorMOG2(detectShadows=False, history=10, varThreshold=30 )
-frame_number = 0
+bg_subtractor = cv2.createBackgroundSubtractorMOG2(detectShadows=False, history=20, varThreshold=30 )
+
 while True:
-    frame_number = frame_number + 1
-    print("frame: ", frame_number)
     ret, frame = cap.read()
     if not ret:
         break
@@ -84,11 +53,7 @@ while True:
 
     # Post-process the mask (optional)
     fg_mask = cv2.erode(fg_mask, None, iterations=3)
-    fg_mask = cv2.dilate(fg_mask, None, iterations=10)
-    fg_mask = cv2.erode(fg_mask, None, iterations=3)
     fg_mask = cv2.dilate(fg_mask, None, iterations=3)
-
-    cv2.imshow("fg_mask",fg_mask)
 
     # Find contours in the mask to detect moving objects
     contours, _ = cv2.findContours(fg_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -97,15 +62,18 @@ while True:
 
     # Draw bounding boxes around detected objects
     for contour in contours:
-        if cv2.contourArea(contour) > 100 and cv2.contourArea(contour) < 3000:  # Adjust the area threshold as needed
+        if cv2.contourArea(contour) > 80:  # Adjust the area threshold as needed
             x, y, w, h = cv2.boundingRect(contour)
             contour_image = crop_image(frame,x,y,w,h,)
             cv2.imshow("contour image",contour_image)
             contour_hist = get_hist(contour_image)
-            # if is_ball(contour_hist):
-            if not is_player(contour_hist,p1_hist,p2_hist):
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    
+            frame_histograms.append(contour_hist)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            index = index +1
+
+    # find the closest histogram
+    hist_index = find_closest_histogram(ball_hist,frame_histograms)
+    # print("Frame No:", frame_number, hist_index)
 
     # Display the original frame and the result
     cv2.imshow('Original Video', frame)

@@ -1,7 +1,7 @@
 import cv2
 
 # Load the video
-video_path = 'TableTennis.avi'  # Replace with the path to your video file
+video_path = '../TableTennis.avi'  # Replace with the path to your video file
 cap = cv2.VideoCapture(video_path)
 
 # Create a tracker (Mean-Shift in this case)
@@ -14,7 +14,7 @@ if not ret:
     print("Error reading video file.")
     exit()
 
-for i in range(1, 120):
+for i in range(1, 30):
     ret, frame = cap.read()
     if not ret:
         break

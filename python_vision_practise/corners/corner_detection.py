@@ -33,6 +33,9 @@ def find_table_corners(image_path):
     for point in table_corners:
         x, y = point[0]
         print(f"Corner at ({x}, {y})")
+        center = (x,y)
+        cv2.circle(image, center, 5, (0, 0, 255), -1)
+
 
     # Display the image with the detected table corners
     cv2.imshow("Table Corners", image)
@@ -40,7 +43,7 @@ def find_table_corners(image_path):
     cv2.destroyAllWindows()
 
 # Specify the path to your image
-image_path = "Table4.jpg"
+image_path = "../Table4.jpg"
 
 # Call the function to find and print the table corners
 find_table_corners(image_path)

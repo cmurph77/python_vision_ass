@@ -1,17 +1,8 @@
-# this code takes an images and back projects the color of 
-# grass back onto it from a sample roi
 
-import cv2
-import numpy as np
-from matplotlib import pyplot as plt
-
-
-cv2.destroyAllWindows()
-
-original_image = cv2.imread("../../tables/video_frame.jpg")
+original_image = cv2.imread("goalkeeper.jpg")
 hsv_original = cv2.cvtColor(original_image, cv2.COLOR_BGR2HSV)
 
-roi = cv2.imread("/Users/cianmurphy/code_directories/computer_vision/python_vision_ass/balls/orange_ball.jpg")
+roi = cv2.imread("pitch_ground.jpg")
 hsv_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
 hue, saturation, value = cv2.split(hsv_roi)
@@ -34,5 +25,3 @@ cv2.imshow("Mask", mask)
 cv2.imshow("Original image", original_image)
 cv2.imshow("Result", result)
 cv2.imshow("Roi", roi)
-cv2.waitKey(0)
-cv2.destroyAllWindows()

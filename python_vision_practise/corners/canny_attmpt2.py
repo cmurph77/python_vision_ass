@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Load the image
-image = cv2.imread('tables/Table1.jpg')
+image = cv2.imread('../Table4.jpg')
 
 # Preprocessing
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -16,7 +16,7 @@ contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
 # Filter and approximate contours
 filtered_contours = []
 for contour in contours:
-    if len(contour) >= 5:  # Filter based on the number of vertices
+    if len(contour) >= 4:  # Filter based on the number of vertices
         epsilon = 0.04 * cv2.arcLength(contour, True)
         approx = cv2.approxPolyDP(contour, epsilon, True)
         if len(approx) == 4:

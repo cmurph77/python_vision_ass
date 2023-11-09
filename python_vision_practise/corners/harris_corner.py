@@ -1,13 +1,13 @@
 import numpy as np
 import cv2
 
-image = cv2.imread('Table4.jpg') 
+image = cv2.imread('../Table4.jpg') 
 
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
 
 image_flt = np.float32(gray) 
 
-dst = cv2.cornerHarris(image_flt, 20, 30,10)
+dst = cv2.cornerHarris(image_flt, 20, 3,10)
 
 dst = cv2.dilate(dst, None) 
 

@@ -25,7 +25,7 @@ def perform_orange_mask(img,opt):
     if(opt == 1) : return orange_masked_image;
     if(opt == 2) : return mask;
 
-def perform_blue_mask(img,opt):
+def perform_blue_mask(img):
     # Define the blue color range in HSV format
     blue_lower = np.array([100, 40, 30])
     blue_upper = np.array([130, 255, 255])
@@ -60,12 +60,13 @@ def create_white_mask(image):
 
 
 
-img = cv2.imread("tables/Table4.jpg")
+image_path = '../../tables/Table4.jpg'
+img = cv2.imread(image_path)
 blue_mask = perform_blue_mask(img)
 white_mask  = create_white_mask(img)
 
-# connected_mask = cv2.bitwise_and(blue_mask, white_mask)
-# cv2.imshow("masked image",connected_mask)
+cv2.imshow("blue_mask", blue_mask)
+cv2.imshow("white_mask",white_mask)
 
 
 

@@ -8,11 +8,18 @@ table_5_points = [(1224, 490), (2562, 555), (223, 2739), (3742, 2762)] # 1224	49
 # // white lines) using edge detection, and then transform the image so that you have a plan view of the table.
 # // Determine how well your approach works on the static images of the tables provided. Ensure that you use
 # // techniques which can be used in general (e.g. ideally the techniques would cope with changes in lighting, etc.).
-# // An
-# alyse how well your approach works on the static images of the tables provided, and later on the table tennis
+# // Analyse how well your approach works on the static images of the tables provided, and later on the table tennis
 # // video.  Note that in the report you may need to use some of the Learning and Evaluation section of the course,
 # // also in section 9.3 of “Computer Vision with OpenCV”  (when reporting performance).
 
+
+def testing_harness(image_no):
+    img_path = "tables/Table",image_no,".jpg"
+    image = cv2.imread(img_path)
+
+    cv2.imshow("Image", image)
+
+testing_harness(1)
 
 # ----------------------------------------------------------
 

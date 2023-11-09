@@ -29,12 +29,22 @@ def perform_orange_mask(img,opt):
 
 def video_analysis():
     # Open the video file
-    video_path = "TableTennis.avi"
+    video_path = "../TableTennis.avi"
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened(): print("Error: Could not open the video file."); exit();
 
     frame_count = 0;
     analyse = True;
+
+
+    roi = cv2.imread("pitch_ground.jpg")
+    hsv_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+
+    hue, saturation, value = cv2.split(hsv_roi)
+
+    # Histogram ROI
+    roi_hist = cv2.calcHist([hsv_roi], [0, 1], None, [180, 256], [0, 180, 0, 256])
+
     while analyse:
         frame_count = frame_count + 1
         if(frame_count >100): analyse = False; # end after 100 frames
@@ -43,8 +53,23 @@ def video_analysis():
         if not ret:
             break
 
+        hsv_original = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+
         # Perform frame analysis here
-        analyse_frame(frame,frame_count)
+        mask = cv2.calcBackProject([hsv_original], [0, 1], roi_hist, [0, 180, 0, 256], 1)
+
+        # Filtering remove noise
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)) # create a kernel for the 2d filter
+        mask = cv2.filter2D(mask, -1, kernel)
+        _, mask = cv2.threshold(mask, 100, 255, cv2.THRESH_BINARY)  # removes more noise
+
+        mask = cv2.merge((mask, mask, mask))  # create 3 channel mask for doing bitwise operations
+        result = cv2.bitwise_and(frame, mask)
+
+        cv2.imshow("Mask", mask)
+        cv2.imshow("Original image", frame)
+        cv2.imshow("Result", result)
 
         # Display the frame
         # cv2.imshow('Frame', frame)
@@ -57,9 +82,9 @@ def video_analysis():
 
 def analyse_frame(frame, count):
         # Display the frame
-        cv2.imshow('Frame', frame)
-        orange_mask = perform_orange_mask(frame,1)
-        cv2.imshow("mask",orange_mask)
+        # cv2.imshow('Frame', frame)
+        hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
 
 
 video_analysis()
