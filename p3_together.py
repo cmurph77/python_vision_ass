@@ -124,20 +124,22 @@ def is_player(contour_hist,p1_hist,p2_hist):
     else:
         return False
 
-def is_ball(contour_hist):
-    orange_ball_img = cv2.imread("balls/orange_ball.jpg")
-    ball_hist = get_hist(orange_ball_img)
 
-    min_distance = float(0.98)
+# def is_ball(contour_hist):
+#     orange_ball_img = cv2.imread("balls/orange_ball.jpg")
+#     ball_hist = get_hist(orange_ball_img)
+
+#     min_distance = float(0.98)
 
 
-    distance = cv2.compareHist(contour_hist, ball_hist, cv2.HISTCMP_BHATTACHARYYA)
-    print("distance ball", distance)
-    if distance > min_distance:
-        return True
-    else: 
-        return False
+#     distance = cv2.compareHist(contour_hist, ball_hist, cv2.HISTCMP_BHATTACHARYYA)
+#     print("distance ball", distance)
+#     if distance > min_distance:
+#         return True
+#     else: 
+#         return False
 
+#  TODO COMMENT TRAJECTORY
 def track_trajectory(locations):
     # Initialize variables to keep track of the ball's direction
     vertical_direction = None  # Start with no vertical direction
@@ -216,27 +218,26 @@ while True:
 
     # Draw bounding boxes around detected objects
     for contour in contours:
-        # Calculate the moments
-        M = cv2.moments(contour)
-        # Calculate the center
-        if M["m00"] != 0:
-            cX = int(M["m10"] / M["m00"])
-            cY = int(M["m01"] / M["m00"])
-        margin = 150
-        if cX > margin and cX < video_width - margin: 
-            if cv2.contourArea(contour) > 2500 and cv2.contourArea(contour) < 10000:  # Adjust the area threshold as needed
-                x, y, w, h = cv2.boundingRect(contour)
-                contour_image = crop_image(frame,x,y,w,h,)
-                # cv2.imshow("contour image",contour_image)
-                contour_hist = get_hist(contour_image)
-                # if is_ball(contour_hist):
-                player = is_player(contour_hist,p1_hist,p2_hist)
-                if not player :
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2) # draw green box around ball
-                    cv2.circle(ball_path, (cX, cY), 5, (255, 0, 0), -1)
-                    ball_locations.append((frame_number,(cX,cY)))
+        
+        # Calculate the center of the contour
+        M = cv2.moments(contour)                 # Calculate the moments for center calculation 
+        if M["m00"] != 0:             
+            cX = int(M["m10"] / M["m00"])         # x coord for center
+            cY = int(M["m01"] / M["m00"])         # y coord for center
+        
+        margin = 150                               # this is the margin on left and rigth where players are so can ignore movement here
+        if cX > margin and cX < video_width - margin:                             # check if the contour is outside the left and right margin
+            if cv2.contourArea(contour) > 2500 and cv2.contourArea(contour) < 10000:    # Adjust the area threshold as needed
+                x, y, w, h = cv2.boundingRect(contour)                            # draw bounding rectangle around contour
+                contour_image = crop_image(frame,x,y,w,h,)                        # create an image with just the contour
+                contour_hist = get_hist(contour_image)                            # get a histogram for the contour
+                player = is_player(contour_hist,p1_hist,p2_hist)                  # check if the contour hist is close to either player hist
+                if not player :                                                   # not a player so should be ball
+                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  # draw green box around ball
+                    cv2.circle(ball_path, (cX, cY), 5, (255, 0, 0), -1)           # mark the ball path image with contour center
+                    ball_locations.append((frame_number,(cX,cY)))                 # note the ball center
                 else: 
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)  # player detected so draw red box around contour
 
 
     # Display the original frame and the result
