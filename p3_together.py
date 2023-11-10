@@ -70,21 +70,6 @@ def crop_image(image, x, y, width, height):
     cropped_image = image[y:y + height, x:x + width]
     return cropped_image
 
-# def find_closest_histogram(image_hist, histogram_array):
-#     closest_index = -1
-#     min_distance = float('inf')
-
-#     for i, hist in enumerate(histogram_array):
-#         # Calculate the Bhattacharyya distance between the image's histogram and each histogram in the array
-#         distance = cv2.compareHist(image_hist, hist, cv2.HISTCMP_BHATTACHARYYA)
-
-#         # Check if the current histogram is closer than the previous closest one
-#         if distance < min_distance:
-#             min_distance = distance
-#             closest_index = i
-
-#     # return closest_index, min_distance
-#     return closest_index
 
 """"this funciton compares the contour histogram to the histograms of the players and returns True if contour is player"""
 def is_player(contour_hist,p1_hist,p2_hist):
@@ -99,20 +84,6 @@ def is_player(contour_hist,p1_hist,p2_hist):
     else:
         return False
 
-
-# def is_ball(contour_hist):
-#     orange_ball_img = cv2.imread("balls/orange_ball.jpg")
-#     ball_hist = get_hist(orange_ball_img)
-
-#     min_distance = float(0.98)
-
-
-#     distance = cv2.compareHist(contour_hist, ball_hist, cv2.HISTCMP_BHATTACHARYYA)
-#     print("distance ball", distance)
-#     if distance > min_distance:
-#         return True
-#     else: 
-#         return False
 
 #  TODO COMMENT TRAJECTORY
 """"This function tracks the trajectory of the ball and detects whether is bounces or gets hit by player"""
@@ -201,7 +172,7 @@ while True:
             cX = int(M["m10"] / M["m00"])         # x coord for center
             cY = int(M["m01"] / M["m00"])         # y coord for center
         
-        margin = 150                               # this is the margin on left and rigth where players are so can ignore movement here
+        margin = 180                               # this is the margin on left and rigth where players are so can ignore movement here
         if cX > margin and cX < video_width - margin:                             # check if the contour is outside the left and right margin
             if cv2.contourArea(contour) > 2500 and cv2.contourArea(contour) < 10000:    # Adjust the area threshold as needed
                 x, y, w, h = cv2.boundingRect(contour)                            # draw bounding rectangle around contour
