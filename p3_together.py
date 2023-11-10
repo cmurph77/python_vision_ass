@@ -17,35 +17,8 @@ def draw_path(a):
         prev_center = current_center
     return path_img
 
-"""ball_locations = [(21, (667, 408)), (22, (639, 386)), (23, (612, 369)), (24, (766, 367)), (25, (769, 368)),
-                   (25, (559, 342)), (26, (770, 366)), (26, (534, 335)), (27, (768, 366)), (28, (793, 332)), 
-                   (34, (360, 380)), (35, (341, 398)), (36, (322, 392)), (37, (305, 376)), (46, (358, 294)), 
-                   (49, (449, 293)), (50, (478, 297)), (51, (507, 303)), (54, (590, 338)), (56, (645, 371)),
-                     (68, (725, 308)), (69, (670, 285)), (72, (788, 320)), (73, (798, 324)), (74, (807, 329)), 
-                     (76, (492, 337)), (78, (445, 376)), (79, (421, 398)), (80, (401, 401)), (81, (387, 383)), 
-                     (92, (294, 325)), (93, (313, 324)), (94, (386, 319)), (95, (412, 321)), (98, (487, 341)), 
-                     (100, (536, 368)), (101, (559, 384)), (102, (581, 403)), (103, (599, 404)), (104, (611, 387)),
-                       (120, (719, 356)), (124, (379, 315)), (125, (351, 331)), (126, (324, 350)), (127, (296, 372)),
-                         (127, (802, 365)), (128, (269, 396)), (129, (241, 424)), (130, (214, 458)), (131, (197, 437)),
-                           (132, (182, 415)), (133, (168, 398)), (134, (152, 382)), (143, (200, 315)), (144, (242, 305)),
-                             (145, (282, 299)), (146, (321, 297)), (147, (358, 297)), (148, (393, 301)), (149, (426, 307)),
-                               (150, (457, 316)), (151, (488, 328)), (152, (516, 342)), (153, (546, 360)), (154, (571, 377)), 
-                               (155, (597, 398)), (156, (616, 396)), (157, (631, 375)), (168, (629, 256)), (169, (599, 245)), 
-                               (170, (570, 237)), (171, (540, 231)), (173, (482, 227)), (174, (454, 229)), (175, (425, 233)), 
-                               (176, (397, 240)), (177, (369, 249)), (178, (341, 261)), (179, (314, 276)), (180, (809, 363)), 
-                               (180, (285, 292)), (181, (258, 312)), (182, (230, 335)), (183, (203, 359)), (184, (176, 386)), 
-                               (204, (152, 250)), (205, (193, 237)), (206, (235, 227)), (207, (273, 221)), (208, (310, 217)), 
-                               (209, (347, 217)), (210, (382, 218)), (211, (416, 223)), (212, (449, 231)), (213, (481, 242)), 
-                               (214, (510, 254)), (215, (538, 268)), (220, (669, 373)), (243, (465, 178)), (244, (440, 190)), 
-                               (245, (415, 204)), (246, (389, 221)), (247, (364, 240)), (248, (339, 262)), (249, (314, 288)), 
-                               (250, (288, 315)), (251, (262, 346)), (252, (236, 379)), (253, (210, 415)), (254, (189, 440)), 
-                               (255, (177, 402)), (256, (166, 375)), (257, (155, 353)), (266, (285, 243)), (267, (325, 241)), 
-                               (268, (366, 243)), (269, (405, 247)), (270, (442, 253)), (271, (478, 262)), (274, (581, 306)), 
-                               (276, (641, 343)), (277, (673, 368)), (278, (701, 392)), (279, (729, 422)), (280, (747, 393)), 
-                               (281, (763, 370)), (282, (779, 351)), (283, (795, 333)), (291, (754, 220)), (320, (344, 352))]
-"""
 
-# A function to perform linear interpolation between two points
+""" A function to perform linear interpolation between two points"""
 def interpolate(start_frame, end_frame, start_point, end_point):
     if start_frame == end_frame:
         return [start_point]
@@ -78,7 +51,7 @@ def fill_gaps(ball_locations):
 
     return filled_coordinates
 
-
+"""" This function returns the histogram of an image"""
 def get_hist(image):
     image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     # hue, saturation, value = cv2.split(orange_ball_hsv)
@@ -86,6 +59,7 @@ def get_hist(image):
     hist = cv2.calcHist([image_hsv], [0, 1], None, [180, 256], [0, 180, 0, 256])
     return hist
 
+""""This function returns a cropped image to the size specified in parameters"""
 def crop_image(image, x, y, width, height):
 
     if x < 0:
@@ -112,6 +86,7 @@ def crop_image(image, x, y, width, height):
 #     # return closest_index, min_distance
 #     return closest_index
 
+""""this funciton compares the contour histogram to the histograms of the players and returns True if contour is player"""
 def is_player(contour_hist,p1_hist,p2_hist):
     distance_p1 = cv2.compareHist(contour_hist, p1_hist, cv2.HISTCMP_BHATTACHARYYA)
     distance_p2 = cv2.compareHist(contour_hist, p2_hist, cv2.HISTCMP_BHATTACHARYYA) 
@@ -140,6 +115,7 @@ def is_player(contour_hist,p1_hist,p2_hist):
 #         return False
 
 #  TODO COMMENT TRAJECTORY
+""""This function tracks the trajectory of the ball and detects whether is bounces or gets hit by player"""
 def track_trajectory(locations):
     # Initialize variables to keep track of the ball's direction
     vertical_direction = None  # Start with no vertical direction
