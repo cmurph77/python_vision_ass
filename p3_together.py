@@ -87,38 +87,60 @@ def is_player(contour_hist,p1_hist,p2_hist):
 
 #  TODO COMMENT TRAJECTORY
 """"This function tracks the trajectory of the ball and detects whether is bounces or gets hit by player"""
-def track_trajectory(locations):
+
+def track_trajectory(locations,video_width,print_result):
     # Initialize variables to keep track of the ball's direction
     vertical_direction = None  # Start with no vertical direction
     horizontal_direction = None  # Start with no horizontal direction
     direction_changes = []
+    print(direction_changes)
 
     # We will compare each point with the previous one to determine direction changes
     # Start with the second point (index 1) because we need a previous point for comparison
     for i in range(1, len(locations)):
         # Current and previous points
         current_frame, current_point = locations[i]
+        x_loc = current_point[0]
         prev_frame, prev_point = locations[i - 1]
 
         # Determine the vertical and horizontal directions of movement
         current_vertical_direction = "down" if current_point[1] > prev_point[1] else "up"
         current_horizontal_direction = "right" if current_point[0] > prev_point[0] else "left"
 
-        # # Check if there has been a change in vertical direction to "up"
-        # if current_vertical_direction == "up" and vertical_direction == "down":
-        #     direction_changes.append((current_frame, "BOUNCE"))
+        # Check if there has been a change in vertical direction to "up"
+        if current_vertical_direction == "up" and vertical_direction == "down":
+            out = f"Frame: {current_frame} {current_point} Bounce on the Table" 
+            if print_result: print(out)           
 
-        # # Check if there has been a change in horizontal direction
-        # if current_horizontal_direction != horizontal_direction and horizontal_direction is not None:
-        #     direction_changes.append((current_frame, "PADDLE"))
+        # Check if there has been a change in horizontal direction
+        if current_horizontal_direction != horizontal_direction and horizontal_direction is not None:
+            direction_changes.append((current_frame, "HIT BY PLAYER"))
+            center_margin = 50
+            if x_loc > video_width/2 - center_margin and x_loc < video_width/2 + center_margin  :  # changes direction in center - must bnet
+                out = f"Frame: {current_frame} {current_point} Hit the Net" 
+                if print_result: print(out)
+            else:  
+                out = f"Frame: {current_frame} {current_point} Hit By Player" 
+                if print_result: print(out)
         
         # Update the current directions
         vertical_direction = current_vertical_direction
         horizontal_direction = current_horizontal_direction
 
     # Output the direction changes
-    for change in direction_changes:
-        print(f"Frame {change[0]}: {change[1]}")
+    # for change in direction_changes:
+    #     # frame_offset = locations[0]
+    #     # frame_offset = 17
+    #     # # print(locations[0])
+    #     # frame_num = change[0]
+    #     # print("frame_num", frame_num)
+    #     # location_index = frame_num - frame_offset
+    #     # print("location index",location_index)
+    #     # print(frame_and_location)
+    #     # frame_and_location = locations[location_index]
+    #     # coords = frame_and_location[1]
+
+    #     print(f"Frame {change[0]}: {change[1]}", "at coordinates::",coords)
 
 # Create a VideoCapture object to read from a video file or camera
 video_source = 'TableTennis.avi'  # Replace with your video source
@@ -190,7 +212,7 @@ while True:
 
     # Display the original frame and the result
     if show: cv2.imshow('Original Video', frame)
-    if show: cv2.imshow('Ball Path', ball_path)
+    # if show: cv2.imshow('Ball Path', ball_path)
 
     if cv2.waitKey(30) & 0xFF == 27: break  # Press 'ESC' button to exit the while loop
 
@@ -200,11 +222,10 @@ cv2.destroyAllWindows()
 
 filled_gaps_locations = fill_gaps(ball_locations)
 # print(filled_gaps_locations)
-track_trajectory(filled_gaps_locations)
+track_trajectory(filled_gaps_locations,video_width,True)
 
 cv2.imshow("filled coords", draw_path(filled_gaps_locations))
 
-# print(filled_coords)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
