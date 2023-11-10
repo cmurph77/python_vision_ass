@@ -104,13 +104,13 @@ def track_trajectory(locations):
         current_vertical_direction = "down" if current_point[1] > prev_point[1] else "up"
         current_horizontal_direction = "right" if current_point[0] > prev_point[0] else "left"
 
-        # Check if there has been a change in vertical direction to "up"
-        if current_vertical_direction == "up" and vertical_direction == "down":
-            direction_changes.append((current_frame, "BOUNCE"))
+        # # Check if there has been a change in vertical direction to "up"
+        # if current_vertical_direction == "up" and vertical_direction == "down":
+        #     direction_changes.append((current_frame, "BOUNCE"))
 
-        # Check if there has been a change in horizontal direction
-        if current_horizontal_direction != horizontal_direction and horizontal_direction is not None:
-            direction_changes.append((current_frame, "PADDLE"))
+        # # Check if there has been a change in horizontal direction
+        # if current_horizontal_direction != horizontal_direction and horizontal_direction is not None:
+        #     direction_changes.append((current_frame, "PADDLE"))
         
         # Update the current directions
         vertical_direction = current_vertical_direction
@@ -143,6 +143,7 @@ ball_path = np.zeros((video_height, video_width, 3), dtype=np.uint8) # create an
 # This while loops through the whole video
 while True:
     frame_number = frame_number + 1         # update frame count
+    print("frame no:", frame_number)
     ret, frame = cap.read()                 # get the next frame
     if not ret: break
  
@@ -198,6 +199,7 @@ cap.release()
 cv2.destroyAllWindows()
 
 filled_gaps_locations = fill_gaps(ball_locations)
+# print(filled_gaps_locations)
 track_trajectory(filled_gaps_locations)
 
 cv2.imshow("filled coords", draw_path(filled_gaps_locations))

@@ -1,0 +1,275 @@
+Frame: 24 (766, 367) Hit By Player
+Frame: 25 (559, 342) Bounce on the Table
+Frame: 25 (559, 342) Hit By Player
+Frame: 26 (770, 366) Hit By Player
+Frame: 26 (534, 335) Bounce on the Table
+Frame: 26 (534, 335) Hit By Player
+Frame: 27 (768, 366) Hit By Player
+Frame: 28 (709, 368) Hit By Player
+Frame: 36 (322, 392) Bounce on the Table
+Frame: 38 (310, 366) Hit By Player
+Frame: 57 (651, 365) Bounce on the Table
+Frame: 69 (670, 285) Hit By Player
+Frame: 81 (387, 383) Bounce on the Table
+Frame: 93 (313, 324) Hit By Player
+Frame: 104 (611, 387) Bounce on the Table
+Frame: 121 (634, 345) Hit By Player
+Frame: 131 (197, 437) Bounce on the Table
+Frame: 133 (183, 405) Hit By Player
+Frame: 156 (616, 396) Bounce on the Table
+Frame: 158 (630, 364) Hit By Player
+Frame: 184 (202, 353) Bounce on the Table
+Frame: 206 (235, 227) Hit By Player
+Frame: 221 (660, 364) Bounce on the Table
+Frame: 221 (660, 364) Hit By Player
+Frame: 255 (197, 423) Bounce on the Table
+Frame: 255 (197, 423) Hit By Player
+Frame: 280 (747, 393) Bounce on the Table
+Frame: 283 (776, 336) Hit By Player
+Frame: 321 (341, 350) Bounce on the Table
+Frame: 410 (224, 342) Hit By Player
+Frame: 422 (529, 386) Bounce on the Table
+Frame: 435 (581, 343) Hit By Player
+Frame: 437 (587, 346) Hit By Player
+Frame: 441 (601, 374) Bounce on the Table
+Frame: 441 (601, 374) Hit By Player
+Frame: 446 (769, 375) Bounce on the Table
+Frame: 446 (769, 375) Hit By Player
+Frame: 447 (245, 435) Hit By Player
+Frame: 448 (225, 420) Bounce on the Table
+Frame: 450 (216, 391) Hit By Player
+Frame: 458 (263, 321) Hit By Player
+Frame: 459 (394, 302) Bounce on the Table
+Frame: 459 (394, 302) Hit By Player
+Frame: 470 (735, 418) Bounce on the Table
+Frame: 473 (763, 365) Hit By Player
+Frame: 496 (230, 382) Bounce on the Table
+Frame: 496 (230, 382) Hit By Player
+Frame: 508 (204, 281) Bounce on the Table
+Frame: 508 (204, 281) Hit By Player
+Frame: 509 (465, 304) Hit the Net
+Frame: 509 (199, 282) Bounce on the Table
+Frame: 509 (199, 282) Hit By Player
+Frame: 510 (492, 316) Hit the Net
+Frame: 511 (185, 289) Bounce on the Table
+Frame: 511 (185, 289) Hit By Player
+Frame: 512 (379, 328) Hit By Player
+Frame: 516 (639, 385) Bounce on the Table
+Frame: 517 (638, 377) Hit By Player
+Frame: 529 (680, 319) Hit By Player
+Frame: 531 (614, 327) Bounce on the Table
+Frame: 531 (614, 327) Hit By Player
+Frame: 539 (265, 414) Bounce on the Table
+Frame: 542 (238, 366) Hit By Player
+Frame: 562 (656, 389) Bounce on the Table
+Frame: 573 (628, 285) Hit By Player
+Frame: 576 (754, 314) Hit By Player
+Frame: 576 (530, 288) Bounce on the Table
+Frame: 576 (530, 288) Hit By Player
+Frame: 577 (769, 317) Hit By Player
+Frame: 577 (499, 294) Bounce on the Table
+Frame: 577 (499, 294) Hit the Net
+Frame: 578 (777, 327) Hit By Player
+Frame: 578 (468, 304) Bounce on the Table
+Frame: 578 (468, 304) Hit the Net
+Frame: 586 (238, 399) Bounce on the Table
+Frame: 588 (232, 370) Hit By Player
+Frame: 595 (209, 332) Hit By Player
+Frame: 595 (379, 307) Bounce on the Table
+Frame: 595 (379, 307) Hit By Player
+Frame: 606 (763, 434) Bounce on the Table
+Frame: 607 (756, 417) Hit By Player
+Frame: 631 (236, 372) Bounce on the Table
+Frame: 632 (256, 366) Hit By Player
+Frame: 644 (225, 306) Bounce on the Table
+Frame: 644 (225, 306) Hit By Player
+Frame: 645 (566, 369) Hit By Player
+Frame: 649 (683, 407) Bounce on the Table
+Frame: 654 (764, 358) Hit By Player
+Frame: 674 (227, 340) Hit By Player
+Frame: 689 (466, 378) Bounce on the Table
+Frame: 689 (466, 378) Hit the Net
+Frame: 734 (390, 342) Hit By Player
+Frame: 737 (392, 349) Hit By Player
+Frame: 738 (393, 351) Hit By Player
+Frame: 741 (395, 358) Hit By Player
+Frame: 742 (396, 361) Hit By Player
+Frame: 746 (395, 369) Hit By Player
+Frame: 801 (246, 405) Bounce on the Table
+Frame: 801 (246, 405) Hit By Player
+Frame: 816 (634, 382) Bounce on the Table
+Frame: 825 (620, 279) Hit By Player
+Frame: 829 (756, 347) Hit By Player
+Frame: 829 (503, 245) Bounce on the Table
+Frame: 829 (503, 245) Hit the Net
+Frame: 830 (765, 350) Hit By Player
+Frame: 831 (649, 315) Bounce on the Table
+Frame: 831 (649, 315) Hit By Player
+Frame: 842 (203, 351) Bounce on the Table
+Frame: 846 (204, 322) Hit By Player
+Frame: 847 (204, 315) Hit By Player
+Frame: 851 (205, 286) Hit By Player
+Frame: 852 (205, 279) Hit By Player
+Frame: 856 (206, 250) Hit By Player
+Frame: 857 (206, 243) Hit By Player
+Frame: 861 (207, 214) Hit By Player
+Frame: 877 (730, 376) Bounce on the Table
+Frame: 880 (769, 313) Hit By Player
+Frame: 881 (770, 296) Hit By Player
+Frame: 882 (770, 278) Hit By Player
+Frame: 883 (771, 261) Hit By Player
+Frame: 884 (771, 244) Hit By Player
+Frame: 885 (772, 226) Hit By Player
+Frame: 886 (772, 209) Hit By Player
+Frame: 887 (773, 192) Hit By Player
+Frame: 888 (744, 184) Hit By Player
+Frame: 909 (196, 335) Bounce on the Table
+Frame: 910 (197, 330) Hit By Player
+Frame: 911 (197, 326) Hit By Player
+Frame: 912 (198, 321) Hit By Player
+Frame: 914 (199, 312) Hit By Player
+Frame: 915 (200, 307) Hit By Player
+Frame: 916 (200, 303) Hit By Player
+Frame: 917 (201, 298) Hit By Player
+Frame: 919 (202, 289) Hit By Player
+Frame: 920 (203, 284) Hit By Player
+Frame: 922 (204, 275) Hit By Player
+Frame: 923 (205, 270) Hit By Player
+Frame: 924 (205, 266) Hit By Player
+Frame: 925 (206, 261) Hit By Player
+Frame: 927 (207, 252) Hit By Player
+Frame: 928 (208, 247) Hit By Player
+Frame: 930 (209, 238) Hit By Player
+Frame: 931 (210, 233) Hit By Player
+Frame: 932 (210, 229) Hit By Player
+Frame: 933 (211, 224) Hit By Player
+Frame: 935 (212, 215) Hit By Player
+Frame: 936 (213, 210) Hit By Player
+Frame: 953 (628, 372) Bounce on the Table
+Frame: 967 (634, 238) Hit By Player
+Frame: 968 (760, 300) Hit By Player
+Frame: 968 (603, 237) Bounce on the Table
+Frame: 968 (603, 237) Hit By Player
+Frame: 981 (235, 392) Bounce on the Table
+Frame: 985 (200, 327) Hit By Player
+Frame: 1004 (675, 374) Bounce on the Table
+Frame: 1005 (672, 364) Hit By Player
+Frame: 1016 (696, 302) Hit By Player
+Frame: 1017 (542, 278) Bounce on the Table
+Frame: 1017 (542, 278) Hit By Player
+Frame: 1027 (211, 388) Bounce on the Table
+Frame: 1029 (204, 356) Hit By Player
+Frame: 1049 (691, 370) Bounce on the Table
+Frame: 1049 (691, 370) Hit By Player
+Frame: 1073 (198, 364) Bounce on the Table
+Frame: 1073 (198, 364) Hit By Player
+Frame: 1096 (603, 393) Bounce on the Table
+Frame: 1110 (636, 271) Hit By Player
+Frame: 1111 (675, 290) Hit By Player
+Frame: 1113 (546, 265) Bounce on the Table
+Frame: 1113 (546, 265) Hit By Player
+Frame: 1124 (250, 397) Bounce on the Table
+Frame: 1127 (235, 350) Hit By Player
+Frame: 1134 (211, 301) Hit By Player
+Frame: 1135 (217, 315) Hit By Player
+Frame: 1135 (366, 295) Bounce on the Table
+Frame: 1144 (605, 384) Bounce on the Table
+Frame: 1145 (604, 375) Hit By Player
+Frame: 1170 (181, 421) Bounce on the Table
+Frame: 1171 (191, 407) Hit By Player
+Frame: 1190 (653, 378) Bounce on the Table
+Frame: 1191 (639, 369) Hit By Player
+Frame: 1212 (217, 365) Bounce on the Table
+Frame: 1212 (217, 365) Hit By Player
+Frame: 1233 (760, 426) Bounce on the Table
+Frame: 1234 (759, 425) Hit By Player
+Frame: 1466 (493, 410) Bounce on the Table
+Frame: 1515 (258, 363) Bounce on the Table
+Frame: 1519 (250, 366) Bounce on the Table
+Frame: 1523 (225, 359) Bounce on the Table
+Frame: 1524 (226, 359) Hit By Player
+Frame: 1528 (234, 362) Bounce on the Table
+Frame: 1532 (242, 365) Bounce on the Table
+Frame: 1537 (251, 369) Bounce on the Table
+Frame: 1541 (259, 372) Bounce on the Table
+Frame: 1546 (269, 376) Bounce on the Table
+Frame: 1550 (276, 379) Bounce on the Table
+Frame: 1554 (284, 382) Bounce on the Table
+Frame: 1559 (294, 386) Bounce on the Table
+Frame: 1563 (301, 389) Bounce on the Table
+Frame: 1568 (311, 393) Bounce on the Table
+Frame: 1572 (319, 396) Bounce on the Table
+Frame: 1577 (355, 382) Bounce on the Table
+Frame: 1578 (213, 341) Hit By Player
+Frame: 1579 (222, 342) Hit By Player
+Frame: 1580 (311, 339) Bounce on the Table
+Frame: 1591 (711, 389) Bounce on the Table
+Frame: 1592 (706, 377) Hit By Player
+Frame: 1615 (301, 412) Bounce on the Table
+Frame: 1618 (289, 363) Hit By Player
+Frame: 1626 (271, 300) Hit By Player
+Frame: 1627 (276, 299) Bounce on the Table
+Frame: 1627 (276, 299) Hit By Player
+Frame: 1638 (720, 381) Bounce on the Table
+Frame: 1638 (720, 381) Hit By Player
+Frame: 1651 (568, 256) Bounce on the Table
+Frame: 1663 (227, 414) Bounce on the Table
+Frame: 1666 (211, 361) Hit By Player
+Frame: 1673 (194, 284) Hit By Player
+Frame: 1674 (384, 271) Bounce on the Table
+Frame: 1674 (384, 271) Hit By Player
+Frame: 1674 (213, 296) Hit By Player
+Frame: 1675 (416, 271) Bounce on the Table
+Frame: 1675 (416, 271) Hit By Player
+Frame: 1675 (196, 286) Hit By Player
+Frame: 1676 (448, 275) Bounce on the Table
+Frame: 1676 (448, 275) Hit the Net
+Frame: 1685 (640, 376) Bounce on the Table
+Frame: 1685 (640, 376) Hit By Player
+Frame: 1711 (238, 426) Bounce on the Table
+Frame: 1714 (207, 375) Hit By Player
+Frame: 1735 (617, 379) Bounce on the Table
+Frame: 1752 (610, 281) Hit By Player
+Frame: 1763 (253, 417) Bounce on the Table
+Frame: 1768 (204, 346) Hit By Player
+Frame: 1780 (181, 295) Bounce on the Table
+Frame: 1780 (181, 295) Hit By Player
+Frame: 1781 (423, 313) Hit By Player
+Frame: 1789 (666, 378) Bounce on the Table
+Frame: 1790 (659, 363) Hit By Player
+Frame: 1817 (201, 340) Bounce on the Table
+Frame: 1817 (201, 340) Hit By Player
+Frame: 1846 (541, 381) Bounce on the Table
+Frame: 1872 (678, 341) Hit By Player
+Frame: 1878 (259, 368) Bounce on the Table
+Frame: 1880 (249, 341) Hit By Player
+Frame: 1891 (266, 300) Hit By Player
+Frame: 1892 (344, 308) Hit By Player
+Frame: 1900 (728, 399) Bounce on the Table
+Frame: 1903 (767, 357) Hit By Player
+Frame: 1925 (308, 389) Bounce on the Table
+Frame: 1928 (283, 343) Hit By Player
+Frame: 1938 (236, 287) Hit By Player
+Frame: 1939 (411, 274) Bounce on the Table
+Frame: 1939 (411, 274) Hit By Player
+Frame: 1939 (246, 290) Hit By Player
+Frame: 1940 (447, 277) Bounce on the Table
+Frame: 1940 (447, 277) Hit the Net
+Frame: 1950 (761, 385) Bounce on the Table
+Frame: 1951 (747, 370) Hit By Player
+Frame: 1974 (258, 365) Bounce on the Table
+Frame: 1974 (258, 365) Hit By Player
+Frame: 1985 (218, 276) Hit By Player
+Frame: 1986 (481, 276) Bounce on the Table
+Frame: 1986 (481, 276) Hit the Net
+Frame: 1987 (199, 280) Bounce on the Table
+Frame: 1987 (199, 280) Hit By Player
+Frame: 1988 (550, 296) Hit By Player
+Frame: 1994 (746, 388) Bounce on the Table
+Frame: 1996 (767, 352) Hit By Player
+Frame: 2022 (185, 375) Bounce on the Table
+Frame: 2022 (185, 375) Hit By Player
+Frame: 2052 (541, 390) Bounce on the Table
+Frame: 2054 (559, 367) Hit By Player
+Frame: 2081 (198, 315) Bounce on the Table
+Frame: 2081 (198, 315) Hit By Player
