@@ -2,9 +2,8 @@ import cv2
 import numpy as np
 
 show = True
-
-def print_array(a):
-    
+"""This method draws the ball path coordinates onto an empty black image"""
+def draw_path(a):    
     video_height = 540
     video_width = 960
     path_img = np.zeros((video_height, video_width, 3), dtype=np.uint8) #create an empty black img to draw path on
@@ -59,6 +58,8 @@ def interpolate(start_frame, end_frame, start_point, end_point):
         frame_coords.append((start_frame + i, new_coords))
     return frame_coords
 
+
+"""this funciton fills missing points between 2 poitns with a straight line"""
 def fill_gaps(ball_locations):
     # Fill in the coordinates for each frame
     filled_coordinates = []
@@ -77,6 +78,7 @@ def fill_gaps(ball_locations):
 
     return filled_coordinates
 
+
 def get_hist(image):
     image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     # hue, saturation, value = cv2.split(orange_ball_hsv)
@@ -94,21 +96,21 @@ def crop_image(image, x, y, width, height):
     cropped_image = image[y:y + height, x:x + width]
     return cropped_image
 
-def find_closest_histogram(image_hist, histogram_array):
-    closest_index = -1
-    min_distance = float('inf')
+# def find_closest_histogram(image_hist, histogram_array):
+#     closest_index = -1
+#     min_distance = float('inf')
 
-    for i, hist in enumerate(histogram_array):
-        # Calculate the Bhattacharyya distance between the image's histogram and each histogram in the array
-        distance = cv2.compareHist(image_hist, hist, cv2.HISTCMP_BHATTACHARYYA)
+#     for i, hist in enumerate(histogram_array):
+#         # Calculate the Bhattacharyya distance between the image's histogram and each histogram in the array
+#         distance = cv2.compareHist(image_hist, hist, cv2.HISTCMP_BHATTACHARYYA)
 
-        # Check if the current histogram is closer than the previous closest one
-        if distance < min_distance:
-            min_distance = distance
-            closest_index = i
+#         # Check if the current histogram is closer than the previous closest one
+#         if distance < min_distance:
+#             min_distance = distance
+#             closest_index = i
 
-    # return closest_index, min_distance
-    return closest_index
+#     # return closest_index, min_distance
+#     return closest_index
 
 def is_player(contour_hist,p1_hist,p2_hist):
     distance_p1 = cv2.compareHist(contour_hist, p1_hist, cv2.HISTCMP_BHATTACHARYYA)
@@ -173,47 +175,42 @@ def track_trajectory(locations):
 video_source = 'TableTennis.avi'  # Replace with your video source
 cap = cv2.VideoCapture(video_source)
 
+# Get histograms for the players cloths and skin
 player_1 = cv2.imread("tables/p1_hist.jpg")
 p1_hist = get_hist(player_1)
-
 player_2 = cv2.imread("tables/p2_hist.jpg")
 p2_hist = get_hist(player_2)
 
-ball_locations = []
+
+ball_locations = []                          # initialize list of ball locations over frames
 
 # Initialize the background subtractor with GMM
-bg_subtractor = cv2.createBackgroundSubtractorMOG2(detectShadows=False, history=10, varThreshold=30 )
+bg_subtractor = cv2.createBackgroundSubtractorMOG2(detectShadows=False, history=10, varThreshold=30 )  
 
-frame_number = 0
+frame_number = 0                            # itialise the frame counter
+video_height,video_width = 540,960          # set the height and width of the video frames
+ball_path = np.zeros((video_height, video_width, 3), dtype=np.uint8) # create an empty black image to draw ball path
 
-video_height = 540
-video_width = 960
-ball_path = np.zeros((video_height, video_width, 3), dtype=np.uint8)
-
+# This while loops through the whole video
 while True:
-    frame_number = frame_number + 1
-    print("FRAME NO: ", frame_number)
-    ret, frame = cap.read()
-    if not ret:
-        break
-
-    tracking_img = frame.copy()
+    frame_number = frame_number + 1         # update frame count
+    ret, frame = cap.read()                 # get the next frame
+    if not ret: break
+ 
 
     # Apply the background subtractor to get the foreground mask
     fg_mask = bg_subtractor.apply(frame)
 
 
-    # Post-process the mask (optional)
+    # Post-process the mask with erosion and dilations
     fg_mask = cv2.erode(fg_mask, None, iterations=3)
     fg_mask = cv2.dilate(fg_mask, None, iterations=40)
     fg_mask = cv2.erode(fg_mask, None, iterations=20)
     fg_mask = cv2.dilate(fg_mask, None, iterations=1)
 
-    # cv2.imshow("fg_mask",fg_mask)
-
     # Find contours in the mask to detect moving objects
     contours, _ = cv2.findContours(fg_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    frame_histograms = []
+    # frame_histograms = []
     index = 0
 
 
@@ -236,8 +233,6 @@ while True:
                 player = is_player(contour_hist,p1_hist,p2_hist)
                 if not player :
                     cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2) # draw green box around ball
-                
-                    cv2.circle(tracking_img, (cX, cY), 5, (255, 0, 0), -1)
                     cv2.circle(ball_path, (cX, cY), 5, (255, 0, 0), -1)
                     ball_locations.append((frame_number,(cX,cY)))
                 else: 
@@ -245,14 +240,11 @@ while True:
 
 
     # Display the original frame and the result
-    cv2.imshow('Original Video', frame)
-    #if show: cv2.imshow('Tracking Frame', tracking_img)
+    if show: cv2.imshow('Original Video', frame)
     if show: cv2.imshow('Ball Path', ball_path)
 
+    if cv2.waitKey(30) & 0xFF == 27: break  # Press 'ESC' button to exit the while loop
 
-    if cv2.waitKey(30) & 0xFF == 27:  # Press 'Esc' to exit
-        # print(ball_locations)
-        break
 
 cap.release()
 cv2.destroyAllWindows()
@@ -260,7 +252,7 @@ cv2.destroyAllWindows()
 filled_gaps_locations = fill_gaps(ball_locations)
 track_trajectory(filled_gaps_locations)
 
-cv2.imshow("filled coords", print_array(filled_gaps_locations))
+cv2.imshow("filled coords", draw_path(filled_gaps_locations))
 
 # print(filled_coords)
 
