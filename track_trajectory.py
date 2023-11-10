@@ -5,6 +5,7 @@ def track_trajectory(locations):
     vertical_direction = None  # Start with no vertical direction
     horizontal_direction = None  # Start with no horizontal direction
     direction_changes = []
+    print(direction_changes)
 
     # We will compare each point with the previous one to determine direction changes
     # Start with the second point (index 1) because we need a previous point for comparison
@@ -31,6 +32,15 @@ def track_trajectory(locations):
 
     # Output the direction changes
     for change in direction_changes:
-        print(f"Frame {change[0]}: {change[1]}")
+        # frame_offset = locations[0]
+        frame_offset = 17
+        # print(locations[0])
+        frame_num = change[0]
+        print("frame_num", frame_num)
+        location_index = frame_num - frame_offset
+        print("location index",location_index)
+
+
+        print(f"Frame {change[0]}: {change[1]}", "location:",locations[location_index])
 
 track_trajectory(ball_locations)

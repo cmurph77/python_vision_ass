@@ -1,3 +1,4 @@
+import math
 import cv2 
 import numpy as np
 
@@ -7,9 +8,17 @@ def print_array(a):
     video_width = 960
     path_img = np.zeros((video_height, video_width, 3), dtype=np.uint8)
     prev_center = (0,0)
+    first = True
     for  point in a:
         current_center = point[1]
-        cv2.line(path_img, prev_center,current_center,(255,0,0),2)
+        print(first)
+        if first: 
+            first = False
+            print("drawing lines", first)
+        else: 
+            print("not first")
+            cv2.line(path_img, prev_center,current_center,(255,0,0),2)
+
         cv2.circle(path_img, current_center, 3, (0,0,255), -1)
 
         prev_center = current_center
@@ -42,6 +51,11 @@ ball_locations = [(21, (667, 408)), (22, (639, 386)), (23, (612, 369)), (24, (76
                                (276, (641, 343)), (277, (673, 368)), (278, (701, 392)), (279, (729, 422)), (280, (747, 393)), 
                                (281, (763, 370)), (282, (779, 351)), (283, (795, 333)), (291, (754, 220)), (320, (344, 352))]
 
+# Function to calculate the Euclidean distance between two points
+def distance(point1, point2):
+    return math.sqrt((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2)
+
+
 # A function to perform linear interpolation between two points
 def interpolate(start_frame, end_frame, start_point, end_point):
     if start_frame == end_frame:
@@ -73,13 +87,48 @@ def fill_gaps(ball_locations):
 
     return filled_coordinates
 
+def remove_duplicated(ball_locations):
+    # Processed list initialization
+    processed_locations = []
+
+    # Initialize previous location with the first coordinate
+    prev_location = ball_locations[0][1]
+
+    for i in range(len(ball_locations)):
+        frame, coord = ball_locations[i]
+        
+        # Check if we're at the last frame or the next frame is different
+        if i == len(ball_locations) - 1 or ball_locations[i][0] != ball_locations[i + 1][0]:
+            processed_locations.append((frame, coord))
+            prev_location = coord
+        else:
+            # Calculate distance to the previous location
+            dist = distance(prev_location, coord)
+            # Look ahead at the next frames with the same frame number
+            j = i + 1
+            while j < len(ball_locations) and ball_locations[j][0] == frame:
+                next_dist = distance(prev_location, ball_locations[j][1])
+                if next_dist < dist:
+                    coord = ball_locations[j][1]
+                    dist = next_dist
+                j += 1
+            # Append the closest coordinate to the processed list
+            processed_locations.append((frame, coord))
+            prev_location = coord
+            # Skip the frames that we have already processed
+            i = j - 1
+        return processed_locations
 
 cv2.imshow("initial ball path", print_array(ball_locations))
+
+no_duplicates = remove_duplicated(ball_locations)
+
+cv2.imshow("Duplicates Removed", print_array(no_duplicates))
 
 filled_coords = fill_gaps(ball_locations)
 cv2.imshow("filled coords", print_array(filled_coords))
 
-print(filled_coords)
+# print(filled_coords)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
