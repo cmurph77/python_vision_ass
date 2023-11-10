@@ -39,7 +39,7 @@ def detect_color(img, x, y, r):
     return mean_color_hsv
 
 
-path = f"balls/Ball5.jpg"
+path = f"balls/Ball2.jpg"
 img = cv2.imread(path)
 
 # Convert the image to grayscale

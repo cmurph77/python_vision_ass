@@ -43,6 +43,8 @@ def detect_color(img, x, y, r):
 
     # Draw the circle on the mask with white color and filled (-1).
     cv2.circle(mask, center, int(r), (255), -1)
+    cv2.imshow("mask",mask)
+
 
     # Now calculate the mean color using the mask. The mask must be 8-bit single-channel.
     mean_color = cv2.mean(img, mask=mask)
@@ -54,44 +56,65 @@ def detect_color(img, x, y, r):
     return mean_color_hsv
 
 
-path = f"balls/Ball10.jpg"
-img = cv2.imread(path)
+def get_ball_center_coords(img, show):
 
-# Convert the image to grayscale
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-blur_matrix = 5
-gray_blurred = cv2.GaussianBlur(gray, (blur_matrix, blur_matrix), 0)
+    # Convert the image to grayscale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    blur_matrix = 5
+    gray_blurred = cv2.GaussianBlur(gray, (blur_matrix, blur_matrix), 0)
 
-# Parameters for the Hough circles method
-max_ball_radius = 200
-min_ball_radius = 10
-param_1 = 90        
-param_2 = 40
-min_dist = gray_blurred.shape[0] // 10  # Height/ 10
+    # Parameters for the Hough circles method
+    max_ball_radius = 200
+    min_ball_radius = 10
+    param_1 = 90        
+    param_2 = 40
+    min_dist = gray_blurred.shape[0] // 10  # Height/ 10
 
-detected_circles = cv2.HoughCircles(gray_blurred, cv2.HOUGH_GRADIENT, 1, minRadius=min_ball_radius,
-                                    maxRadius=max_ball_radius, param1=param_1, param2=param_2, minDist=min_dist)
+    detected_circles = cv2.HoughCircles(gray_blurred, cv2.HOUGH_GRADIENT, 1, minRadius=min_ball_radius,
+                                        maxRadius=max_ball_radius, param1=param_1, param2=param_2, minDist=min_dist)
 
-# Create a list to store the circle information
-circle_info = []
+    # Create a list to store the circle information
+    circle_info = []
 
-# Draw detected circles and store their coordinates and radii
-if detected_circles is not None:
-    detected_circles = np.uint16(np.around(detected_circles))
-    for i in detected_circles[0, :]:
-        x = i[0]
-        y = i[1]
-        center = (x, y)
-        radius = i[2]
-        color = detect_color(img, x, y, radius)
-        if is_color_orange(color) or is_color_white(color):
-            cv2.circle(img, center, radius, (255, 0, 0), 2)
-            cv2.circle(img, center, 1, (0, 0, 255), 3)
-            circle_info.append((center, radius))
+    # Draw detected circles and store their coordinates and radii
+    if detected_circles is not None:
+        detected_circles = np.uint16(np.around(detected_circles))
+        for i in detected_circles[0, :]:
+            x = i[0]
+            y = i[1]
+            center = (x, y)
+            radius = i[2]
+            color = detect_color(img, x, y, radius)
+            if is_color_orange(color) or is_color_white(color):
+                # print("Color is orange or white")
+                cv2.circle(img, center, radius, (0, 255, 0), 2)
+                cv2.circle(img, center, 1, (0, 0, 255), 3)
+                circle_info.append((center, radius))
 
-print(circle_info)
 
-cv2.imshow("Detected Circles", img)
+    if (show):
+        cv2.imshow("Detected Circles", img)
+
+    return circle_info
+
+
+def find_center_handler(image_no):
+    path = f"balls/Ball{image_no}.jpg"
+    ball_img = cv2.imread(path)
+    cv2.imshow("Oringinal Image", ball_img)
+    print("Image No: ", image_no)
+    center = get_ball_center_coords(ball_img, 1)
+    print("     ", center)
+
+
+def iterate_through_ball_images():
+    for i in range(1, 11):
+        print(" ")
+        find_center_handler(i)
+
+
+iterate_through_ball_images()
+# find_center_handler(9)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
