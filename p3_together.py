@@ -109,7 +109,7 @@ def track_trajectory(locations,video_width,print_result):
 
         # Check if there has been a change in vertical direction to "up"
         if current_vertical_direction == "up" and vertical_direction == "down":
-            out = f"Frame: {current_frame} {current_point} Bounce on the Table" 
+            out = f"Frame: {current_frame} {d} Bounce on the Table" 
             if print_result: print(out)           
 
         # Check if there has been a change in horizontal direction

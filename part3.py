@@ -139,7 +139,6 @@ while True:
 
     # Display the original frame and the result
     cv2.imshow('Original Video', frame)
-    # cv2.imshow('Tracking Frame', tracking_img)
     cv2.imshow('Ball Path', ball_path)
 
 

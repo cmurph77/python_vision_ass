@@ -42,7 +42,7 @@ def extend_line(x1, y1, x2, y2, width, height):
 # table_5_points = [(1224, 490), (2562, 555), (223, 2739), (3742, 2762)] # 1224	490	2562	555	223	2739	3742	2762
 
 # Read in the image
-image_path = 'tables/Table3.jpg'
+image_path = 'tables/Table4.jpg'
 img = cv2.imread(image_path)
 
 # ----------------------------------------------------------
@@ -62,15 +62,19 @@ mask = cv2.inRange(hsv, blue_lower, blue_upper)
 mask = cv2.erode(mask, None, iterations=2)
 mask = cv2.dilate(mask, None, iterations=2)
 
+
+blue_mask = cv2.bitwise_and(img, img, mask=mask)
+
+cv2.imshow("BLUE MASK & ORIGINAL", blue_mask)
 cv2.imshow("BLUE MASK", mask)
 
 # ----------------------------------------------------------
 # FIND CONTOURS IN THE MASK
 
 # Process the mask to join contours together
+mask = cv2.dilate(mask,None, iterations=20)
+mask = cv2.erode(mask,None, iterations=20)
 mask = cv2.dilate(mask,None, iterations=10)
-mask = cv2.erode(mask,None, iterations=10)
-mask = cv2.dilate(mask,None, iterations=2)
 
 # Find contours in the mask
 contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -148,7 +152,7 @@ for i in range(dst_dilated.shape[0]):
             cv2.circle(intersecting_lines_image, (j, i), 5, (255, 0, 0), -1)
 
 
-# cv2.imshow("Corners detected", intersecting_lines_image)
+cv2.imshow("CORNERS DETECTED", intersecting_lines_image)
             
 # ----------------------------------------------------------
 # FILTER OUT THE COORDS THAT MAY BE ON THE EDGE OF THE IMAGE (THESE ARE ERRORS)
@@ -172,7 +176,7 @@ for x, y in filtered_border_coordinates:
 # cv2.imshow("border filtered coords", border_filtered_corners)
 
 # ----------------------------------------------------------
-# FILTER OUT THE COORDS THAT ARE NEARBY (there will be four corners per intersection)
+# FILTER OUT THE COORDS THAT ARE NEARBY TO EACHOTHER (there will be four corners on each line intersection)
 
 filtered_nearby_coordinates = []
 
@@ -220,11 +224,11 @@ cv2.imshow("oringal image with corners marked",img)
 #  ----------------------------------------------------------
 # PERFROM PERSPECTTIVE TRANSFORM
 
-pts1 = np.float32(filtered_nearby_coordinates)
+# pts1 = np.float32(filtered_nearby_coordinates)
 
-pts2 = np.float32([[0, 0], [500, 0], [0, 600], [500, 600]])
-matrix = cv2.getPerspectiveTransform(pts1, pts2)
-result = cv2.warpPerspective(img, matrix, (500, 600))
+# pts2 = np.float32([[0, 0], [500, 0], [0, 600], [500, 600]])
+# matrix = cv2.getPerspectiveTransform(pts1, pts2)
+# result = cv2.warpPerspective(img, matrix, (500, 600))
 
 # cv2.imshow("PERSPECTIVE TRANSFORMATION", result)
 # ----------------------------------------------------------
