@@ -3,7 +3,7 @@ import cv2
 from matplotlib import pyplot as plt
 import numpy as np
 
-# Function to extend a line segment to the image borders
+# Function to extend a line segment to the image border TODO review this function
 def extend_line(x1, y1, x2, y2, width, height):
     if x2 != x1:
         # Calculate the slope and y-intercept of the line
@@ -39,10 +39,8 @@ def extend_line(x1, y1, x2, y2, width, height):
 
     return x_start, y_start, x_end, y_end
 
-# table_5_points = [(1224, 490), (2562, 555), (223, 2739), (3742, 2762)] # 1224	490	2562	555	223	2739	3742	2762
-
 # Read in the image
-image_path = 'tables/Table4.jpg'
+image_path = 'tables/Table3.jpg'
 img = cv2.imread(image_path)
 
 # ----------------------------------------------------------
