@@ -1,15 +1,15 @@
 Frame n (row, column) Bounce on Table
 Frame 16 (367, 844) Hit by Player
 Frame 19 (431, 696) Bounce on Table
-Frame 35 (398, 327) Bounce on Table
+1 - Frame 35 (398, 327) Bounce on Table
 Frame 41 (334, 227) Hit by Player
-Frame 56 (390, 669) Bounce on Table
-Frame 64 (315, 774) Hit by Player
-Frame 78 (404, 418) Bounce on Table
-Frame 89 (346, 272) Hit by Player
-Frame 102 (408, 598) Bounce on Table
-Frame 111 (349, 700) Hit by Player
-Frame 129 (457, 211) Bounce on Table
+2 - Frame 56 (390, 669) Bounce on Table,
+3 - Frame 64 (315, 774) Hit by Player,
+4 - Frame 78 (404, 418) Bounce on Table,
+5 - Frame 89 (346, 272) Hit by Player,
+Frame 102 (408, 598) Bounce on Table,
+Frame 111 (349, 700) Hit by Player,
+Frame 129 (457, 211) Bounce on Table,
 Frame 139 (365, 69) Hit by Player
 Frame 155 (401, 614) Bounce on Table
 Frame 164 (307, 725) Hit by Player

@@ -163,11 +163,20 @@ while True:
     fg_mask = bg_subtractor.apply(frame)
 
 
+
+    # # Post-process the mask with erosion and dilations
+    # fg_mask = cv2.erode(fg_mask, None, iterations=3)
+    # fg_mask = cv2.dilate(fg_mask, None, iterations=40)
+    # fg_mask = cv2.erode(fg_mask, None, iterations=20)
+    # fg_mask = cv2.dilate(fg_mask, None, iterations=1)
+    
+
     # Post-process the mask with erosion and dilations
     fg_mask = cv2.erode(fg_mask, None, iterations=3)
     fg_mask = cv2.dilate(fg_mask, None, iterations=40)
     fg_mask = cv2.erode(fg_mask, None, iterations=20)
     fg_mask = cv2.dilate(fg_mask, None, iterations=1)
+    cv2.imshow("post processed mask",fg_mask)
 
     # Find contours in the mask to detect moving objects
     contours, _ = cv2.findContours(fg_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -203,7 +212,7 @@ while True:
     # Display the original frame and the result
     if show: cv2.imshow('Original Video', frame)
     
-    # cv2.waitKey(0)
+    cv2.waitKey(0)
 
     if cv2.waitKey(30) & 0xFF == 27: break  # Press 'ESC' button to exit the while loop
 

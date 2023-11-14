@@ -50,7 +50,7 @@ def extend_line(x1, y1, x2, y2, width, height):
 
 
 # Read in the image
-image_path = 'tables/Table3.jpg'
+image_path = 'tables/Table4.jpg'
 img = cv2.imread(image_path)
 
 # ----------------------------------------------------------
@@ -237,6 +237,9 @@ cv2.imshow("oringal image with corners marked 4.6", img)
 
 #  ----------------------------------------------------------
 # PERFROM PERSPECTTIVE TRANSFORM
+
+# # remove before submitting
+# pts1 = [(1044, 581), (517, 2589), (3800, 1121), (2987, 2099)]
 
 # pts1 = np.float32(filtered_nearby_coordinates)
 
