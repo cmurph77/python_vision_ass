@@ -1,18 +1,16 @@
+""""
+Table 5: [(1208, 478), (2518, 542), (3714, 2637), (278, 2685)]
+Table 2: [(3778, 520), (1459, 685), (208, 1622), (2653, 2806)]
+"""
+
 import math
 import cv2
 from matplotlib import pyplot as plt
 import numpy as np
 
-# Function to extend a line segment to the image border TODO review this function
-""""
-Table 5: [(1208, 478), (2518, 542), (3714, 2637), (278, 2685)]
-Table 2: [(3778, 520), (1459, 685), (208, 1622), (2653, 2806)]
-"""
-min_distance = 300
-blue_lower = np.array([95, 20, 20])
-blue_upper = np.array([135, 255, 255])
-min_line_length = 130
 
+
+# Function to extend a line segment to the image border TODO review this function
 def extend_line(x1, y1, x2, y2, width, height):
     if x2 != x1:
         # Calculate the slope and y-intercept of the line
@@ -48,203 +46,211 @@ def extend_line(x1, y1, x2, y2, width, height):
 
     return x_start, y_start, x_end, y_end
 
+def part2(table_num, show):
+    min_distance = 300
+    blue_lower = np.array([95, 20, 20])
+    blue_upper = np.array([135, 255, 255])
+    min_line_length = 130
 
-# Read in the image
-image_path = 'tables/Table3.jpg'
-img = cv2.imread(image_path)
+    # Read in the image
+    image_path = f'tables/Table{table_num}.jpg'
+    img = cv2.imread(image_path)
 
-# ----------------------------------------------------------
-# CREATE A MASK FOR BLUE REGIONS (TABLE TOP COLOR)
+    # ----------------------------------------------------------
+    # CREATE A MASK FOR BLUE REGIONS (TABLE TOP COLOR)
 
-# # Define the blue color range in HSV format
-# blue_lower = np.array([95, 20, 20])
-# blue_upper = np.array([135, 255, 255])
+    # # Define the blue color range in HSV format
+    # blue_lower = np.array([95, 20, 20])
+    # blue_upper = np.array([135, 255, 255])
 
-# Convert the input image to HSV color space
-hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    # Convert the input image to HSV color space
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-# Create a mask for the blue color
-mask = cv2.inRange(hsv, blue_lower, blue_upper)
-cv2.imshow("BLUE MASK pre processed 4.1", mask)
+    # Create a mask for the blue color
+    mask = cv2.inRange(hsv, blue_lower, blue_upper)
+    if show : cv2.imshow("BLUE MASK pre processed 4.1", mask)
 
-# Perform dilations and erosions on the mask
-mask = cv2.erode(mask, None, iterations=2)
-mask = cv2.dilate(mask, None, iterations=2)
-
-
-blue_mask = cv2.bitwise_and(img, img, mask=mask)
-
-# cv2.imshow("BLUE MASK & ORIGINAL", blue_mask)
-cv2.imshow("BLUE MASK processed 4.2", mask)
-
-# ----------------------------------------------------------
-# FIND CONTOURS IN THE MASK
-
-# Process the mask to join contours together
-mask = cv2.dilate(mask, None, iterations=20)
-mask = cv2.erode(mask, None, iterations=20)
-mask = cv2.dilate(mask, None, iterations=10)
-
-# Find contours in the mask
-contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-# Create an empty image to draw contours on
-contour_img = np.zeros_like(mask)
-
-# Draw the contours on the image
-cv2.drawContours(contour_img, contours, -1, (255), 2)
-
-cv2.imshow("CONTOURS IMAGE 4.3", contour_img)
-
-# ----------------------------------------------------------
-# DETECT LINES IN THE CONTOUR IMAGE AND EXTEND LINES TO THE EDGE OF THE IMAGE
-
-# Recreate an image to draw lines on, using the size of the contour image
-intersecting_lines_image = np.zeros(
-    (img.shape[0], img.shape[1], 3), dtype=np.uint8)
-
-# Find the edges in the image of the largest contour
-edges = cv2.Canny(contour_img, 150, 250, apertureSize=3)
-
-# Apply the Hough Line Transform on the detected edges
-linesP = cv2.HoughLinesP(edges, 1, np.pi / 180, 50, None, 50, 10)
-
-# Filter out the small lines
-# min_line_length = 150
-if linesP is not None:
-    for i in range(0, len(linesP)):
-        l = linesP[i][0]
-        x1, y1, x2, y2 = l[0], l[1], l[2], l[3]
-        # Calculate the Euclidean distance to filter out small lines
-        if math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2) > min_line_length:
-            # Extend the line to the image borders
-            x1_ext, y1_ext, x2_ext, y2_ext = extend_line(
-                x1, y1, x2, y2, contour_img.shape[1], contour_img.shape[0])
-            # Draw the extended line
-            cv2.line(intersecting_lines_image, (x1_ext, y1_ext),
-                     (x2_ext, y2_ext), (255, 255, 255), 10, cv2.LINE_AA)
+    # Perform dilations and erosions on the mask
+    mask = cv2.erode(mask, None, iterations=2)
+    mask = cv2.dilate(mask, None, iterations=2)
 
 
-cv2.imshow("PRE PROCCESSED INTERSECTING LINES IMAGE 4.4",
-           intersecting_lines_image)
+    blue_mask = cv2.bitwise_and(img, img, mask=mask)
 
-# ----------------------------------------------------------
-# PROCESS THE INTERSECTUNG LINES IMAGE
-#   this turns the multipls lines that may be extended out into one solid line
+    # cv2.imshow("BLUE MASK & ORIGINAL", blue_mask)
+    if show : cv2.imshow("BLUE MASK processed 4.2", mask)
 
-intersecting_lines_image = cv2.dilate(
-    intersecting_lines_image, None, iterations=10)
-intersecting_lines_image = cv2.erode(
-    intersecting_lines_image, None, iterations=14)
+    # ----------------------------------------------------------
+    # FIND CONTOURS IN THE MASK
 
-cv2.imshow("POST PROCCESSED INTERSECTING LINES IMAGE 4.5",
-           intersecting_lines_image)
+    # Process the mask to join contours together
+    mask = cv2.dilate(mask, None, iterations=20)
+    mask = cv2.erode(mask, None, iterations=20)
+    mask = cv2.dilate(mask, None, iterations=10)
 
-# make copies of the itersecting lines for later to draw corners
-border_filtered_corners = intersecting_lines_image.copy()
-nearby_filtered_corners = intersecting_lines_image.copy()
+    # Find contours in the mask
+    contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-# ----------------------------------------------------------
-# DETECT CORNERS IN THE INTERSECTING LINES
+    # Create an empty image to draw contours on
+    contour_img = np.zeros_like(mask)
 
-# convert image to gray to process
-gray = cv2.cvtColor(intersecting_lines_image, cv2.COLOR_BGR2GRAY)
+    # Draw the contours on the image
+    cv2.drawContours(contour_img, contours, -1, (255), 2)
 
-# Detect corners
-dst = cv2.cornerHarris(gray, blockSize=2, ksize=3, k=0.04)
-dst_dilated = cv2.dilate(dst, None)
+    if show : cv2.imshow("CONTOURS IMAGE 4.3", contour_img)
 
-# Set threshold to detect corners
-threshold = 0.03 * dst.max()
+    # ----------------------------------------------------------
+    # DETECT LINES IN THE CONTOUR IMAGE AND EXTEND LINES TO THE EDGE OF THE IMAGE
 
-# Initialize list to store coordinates of the corners
-corner_coordinates = []
+    # Recreate an image to draw lines on, using the size of the contour image
+    intersecting_lines_image = np.zeros(
+        (img.shape[0], img.shape[1], 3), dtype=np.uint8)
 
-# Loop through all points in the dilated destination image
-for i in range(dst_dilated.shape[0]):
-    for j in range(dst_dilated.shape[1]):
-        if dst_dilated[i, j] > threshold:
-            # This point is considered a corner
-            corner_coordinates.append((j, i))  # Append as (x, y)
-            cv2.circle(intersecting_lines_image, (j, i), 5, (255, 0, 0), -1)
+    # Find the edges in the image of the largest contour
+    edges = cv2.Canny(contour_img, 150, 250, apertureSize=3)
 
+    # Apply the Hough Line Transform on the detected edges
+    linesP = cv2.HoughLinesP(edges, 1, np.pi / 180, 50, None, 50, 10)
 
-# cv2.imshow("CORNERS DETECTED 4.6", intersecting_lines_image)
-
-# ----------------------------------------------------------
-# FILTER OUT THE COORDS THAT MAY BE ON THE EDGE OF THE IMAGE (THESE ARE ERRORS)
-
-filtered_border_coordinates = []
-
-# Define the margin distance from the image edge
-margin = 100
-
-# Loop through the list of corner coordinates
-for x, y in corner_coordinates:
-    # Check if the corner is more than 'margin' pixels away from any of the edges
-    if x > margin and y > margin and x < intersecting_lines_image.shape[1] - margin and y < intersecting_lines_image.shape[0] - margin:
-        filtered_border_coordinates.append((x, y))
+    # Filter out the small lines
+    # min_line_length = 150
+    if linesP is not None:
+        for i in range(0, len(linesP)):
+            l = linesP[i][0]
+            x1, y1, x2, y2 = l[0], l[1], l[2], l[3]
+            # Calculate the Euclidean distance to filter out small lines
+            if math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2) > min_line_length:
+                # Extend the line to the image borders
+                x1_ext, y1_ext, x2_ext, y2_ext = extend_line(
+                    x1, y1, x2, y2, contour_img.shape[1], contour_img.shape[0])
+                # Draw the extended line
+                cv2.line(intersecting_lines_image, (x1_ext, y1_ext),
+                        (x2_ext, y2_ext), (255, 255, 255), 10, cv2.LINE_AA)
 
 
-# Draw the filtered corners on the image
-for x, y in filtered_border_coordinates:
-    cv2.circle(border_filtered_corners, (x, y), 5, (255, 0, 0), -1)
+    if show : cv2.imshow("PRE PROCCESSED INTERSECTING LINES IMAGE 4.4",
+            intersecting_lines_image)
 
-# cv2.imshow("border filtered coords", border_filtered_corners)
+    # ----------------------------------------------------------
+    # PROCESS THE INTERSECTUNG LINES IMAGE
+    #   this turns the multipls lines that may be extended out into one solid line
 
-# ----------------------------------------------------------
-# FILTER OUT THE COORDS THAT ARE NEARBY TO EACHOTHER (there will be four corners on each line intersection)
+    intersecting_lines_image = cv2.dilate(
+        intersecting_lines_image, None, iterations=10)
+    intersecting_lines_image = cv2.erode(
+        intersecting_lines_image, None, iterations=14)
 
-filtered_nearby_coordinates = []
+    if show : cv2.imshow("POST PROCCESSED INTERSECTING LINES IMAGE 4.5",
+            intersecting_lines_image)
 
-# Define the minimum distance between points
+    # make copies of the itersecting lines for later to draw corners
+    border_filtered_corners = intersecting_lines_image.copy()
+    nearby_filtered_corners = intersecting_lines_image.copy()
 
-# Loop through the list of coordinates
-for coord in filtered_border_coordinates:
-    x, y = coord
-    # Assume the point is far enough away until we check it
-    far_enough = True
-    # Check the distance of the current coordinate from all coordinates in filtered_coordinates
-    for filtered_coord in filtered_nearby_coordinates:
-        fx, fy = filtered_coord
-        # Calculate Euclidean distance
-        distance = np.sqrt((fx - x) ** 2 + (fy - y) ** 2)
-        # If a point is found within min_distance, set far_enough to False and break
-        if distance < min_distance:
-            far_enough = False
-            break
-    # If the point is far enough from all others, add to the list of filtered coordinates
-    if far_enough:
-        filtered_nearby_coordinates.append(coord)
+    # ----------------------------------------------------------
+    # DETECT CORNERS IN THE INTERSECTING LINES
 
-# Return the list of filtered coordinates for further use
-print(filtered_nearby_coordinates)
+    # convert image to gray to process
+    gray = cv2.cvtColor(intersecting_lines_image, cv2.COLOR_BGR2GRAY)
 
-# # ----------------------------------------------------------
-# DRAW CORNERS
+    # Detect corners
+    dst = cv2.cornerHarris(gray, blockSize=2, ksize=3, k=0.04)
+    dst_dilated = cv2.dilate(dst, None)
 
-# # Draw the filtered corners on the intersecting lines image
-# for x, y in filtered_nearby_coordinates:
-#     cv2.circle(nearby_filtered_corners, (x, y), 15, (0, 0, 255), -1)
+    # Set threshold to detect corners
+    threshold = 0.03 * dst.max()
 
-# Draw corners on the original image
-for x, y in filtered_nearby_coordinates:
-    cv2.circle(img, (x, y), 15, (0, 0, 255), -1)
+    # Initialize list to store coordinates of the corners
+    corner_coordinates = []
 
-# cv2.imshow("nearby filtered coords", nearby_filtered_corners)
+    # Loop through all points in the dilated destination image
+    for i in range(dst_dilated.shape[0]):
+        for j in range(dst_dilated.shape[1]):
+            if dst_dilated[i, j] > threshold:
+                # This point is considered a corner
+                corner_coordinates.append((j, i))  # Append as (x, y)
+                cv2.circle(intersecting_lines_image, (j, i), 5, (255, 0, 0), -1)
 
-cv2.imshow("oringal image with corners marked 4.6", img)
 
-#  ----------------------------------------------------------
-# PERFROM PERSPECTTIVE TRANSFORM
+    # cv2.imshow("CORNERS DETECTED 4.6", intersecting_lines_image)
 
-# pts1 = np.float32(filtered_nearby_coordinates)
+    # ----------------------------------------------------------
+    # FILTER OUT THE COORDS THAT MAY BE ON THE EDGE OF THE IMAGE (THESE ARE ERRORS)
 
-# pts2 = np.float32([[0, 0], [500, 0], [0, 600], [500, 600]])
-# matrix = cv2.getPerspectiveTransform(pts1, pts2)
-# result = cv2.warpPerspective(img, matrix, (500, 600))
+    filtered_border_coordinates = []
 
-# cv2.imshow("PERSPECTIVE TRANSFORMATION 4.7", result)
-# ----------------------------------------------------------
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    # Define the margin distance from the image edge
+    margin = 100
+
+    # Loop through the list of corner coordinates
+    for x, y in corner_coordinates:
+        # Check if the corner is more than 'margin' pixels away from any of the edges
+        if x > margin and y > margin and x < intersecting_lines_image.shape[1] - margin and y < intersecting_lines_image.shape[0] - margin:
+            filtered_border_coordinates.append((x, y))
+
+
+    # Draw the filtered corners on the image
+    for x, y in filtered_border_coordinates:
+        cv2.circle(border_filtered_corners, (x, y), 5, (255, 0, 0), -1)
+
+
+    # ----------------------------------------------------------
+    # FILTER OUT THE COORDS THAT ARE NEARBY TO EACHOTHER (there will be four corners on each line intersection)
+
+    filtered_nearby_coordinates = []
+
+    # Define the minimum distance between points
+
+    # Loop through the list of coordinates
+    for coord in filtered_border_coordinates:
+        x, y = coord
+        # Assume the point is far enough away until we check it
+        far_enough = True
+        # Check the distance of the current coordinate from all coordinates in filtered_coordinates
+        for filtered_coord in filtered_nearby_coordinates:
+            fx, fy = filtered_coord
+            # Calculate Euclidean distance
+            distance = np.sqrt((fx - x) ** 2 + (fy - y) ** 2)
+            # If a point is found within min_distance, set far_enough to False and break
+            if distance < min_distance:
+                far_enough = False
+                break
+        # If the point is far enough from all others, add to the list of filtered coordinates
+        if far_enough:
+            filtered_nearby_coordinates.append(coord)
+
+    # Return the list of filtered coordinates for further use
+    print("Corners for Table:", table_num, " => ",filtered_nearby_coordinates)
+
+    # # ----------------------------------------------------------
+    # DRAW CORNERS
+
+    # # Draw the filtered corners on the intersecting lines image
+    # for x, y in filtered_nearby_coordinates:
+    #     cv2.circle(nearby_filtered_corners, (x, y), 15, (0, 0, 255), -1)
+
+    # Draw corners on the original image
+    for x, y in filtered_nearby_coordinates:
+        cv2.circle(img, (x, y), 15, (0, 0, 255), -1)
+
+    # cv2.imshow("nearby filtered coords", nearby_filtered_corners)
+
+    if show : cv2.imshow("oringal image with corners marked 4.6", img)
+
+    #  ----------------------------------------------------------
+    # PERFROM PERSPECTTIVE TRANSFORM
+
+    if len(filtered_nearby_coordinates) == 4 :
+        pts1 = np.float32(filtered_nearby_coordinates)
+
+        pts2 = np.float32([[0, 0], [500, 0], [0, 600], [500, 600]])
+        matrix = cv2.getPerspectiveTransform(pts1, pts2)
+        result = cv2.warpPerspective(img, matrix, (500, 600))
+
+        if show : cv2.imshow("PERSPECTIVE TRANSFORMATION 4.7", result)
+    else: print("Not enought points for transform")
+    # ----------------------------------------------------------
+    if show: cv2.waitKey(0)
+    if show: cv2.destroyAllWindows()
+
+part2(4, False)

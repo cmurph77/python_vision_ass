@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-show = True
 """This method draws the ball path coordinates onto an empty black image"""
 def draw_path(a):    
     video_height = 540
@@ -89,6 +88,7 @@ def is_player(contour_hist,p1_hist,p2_hist):
 """"This function tracks the trajectory of the ball and detects whether is bounces or gets hit by player"""
 
 def track_trajectory(locations,video_width,print_result):
+    print("\nRESULTS:")
     # Initialize variables to keep track of the ball's direction
     vertical_direction = None  # Start with no vertical direction
     horizontal_direction = None  # Start with no horizontal direction
@@ -130,103 +130,106 @@ def track_trajectory(locations,video_width,print_result):
         horizontal_direction = current_horizontal_direction
 
 
+def part3(show):
 
-# Create a VideoCapture object to read from a video file or camera
-video_source = 'TableTennis.avi'  # Replace with your video source
-cap = cv2.VideoCapture(video_source)
+    print("\nANALYSING VIDEO. PLEASE WAIT...")
+    if show: print("PRESS 'ESC' BUTTON TO HALT VIDEO ANALYSIS AND SHOW EVENT RESULTS")
+    # Create a VideoCapture object to read from a video file or camera
+    video_source = 'TableTennis.avi'  # Replace with your video source
+    cap = cv2.VideoCapture(video_source)
 
-# Get histograms for the players cloths and skin
-player_1 = cv2.imread("tables/p1_hist.jpg")
-p1_hist = get_hist(player_1)
-player_2 = cv2.imread("tables/p2_hist.jpg")
-p2_hist = get_hist(player_2)
-
-
-ball_locations = []                          # initialize list of ball locations over frames
-
-# Initialize the background subtractor with GMM
-bg_subtractor = cv2.createBackgroundSubtractorMOG2(detectShadows=False, history=10, varThreshold=30 )  
-
-frame_number = 0                            # itialise the frame counter
-video_height,video_width = 540,960          # set the height and width of the video frames
-ball_path = np.zeros((video_height, video_width, 3), dtype=np.uint8) # create an empty black image to draw ball path
-
-# This while loops through the whole video
-while True:
-    frame_number = frame_number + 1         # update frame count
-    print("frame no:", frame_number)
-    ret, frame = cap.read()                 # get the next frame
-    if not ret: break
- 
-
-    # Apply the background subtractor to get the foreground mask
-    fg_mask = bg_subtractor.apply(frame)
+    # Get histograms for the players cloths and skin
+    player_1 = cv2.imread("data/p1_hist.jpg")
+    p1_hist = get_hist(player_1)
+    player_2 = cv2.imread("data/p2_hist.jpg")
+    p2_hist = get_hist(player_2)
 
 
+    ball_locations = []                          # initialize list of ball locations over frames
 
-    # # Post-process the mask with erosion and dilations
-    # fg_mask = cv2.erode(fg_mask, None, iterations=3)
-    # fg_mask = cv2.dilate(fg_mask, None, iterations=40)
-    # fg_mask = cv2.erode(fg_mask, None, iterations=20)
-    # fg_mask = cv2.dilate(fg_mask, None, iterations=1)
+    # Initialize the background subtractor with GMM
+    bg_subtractor = cv2.createBackgroundSubtractorMOG2(detectShadows=False, history=10, varThreshold=30 )  
+
+    frame_number = 0                            # itialise the frame counter
+    video_height,video_width = 540,960          # set the height and width of the video frames
+    ball_path = np.zeros((video_height, video_width, 3), dtype=np.uint8) # create an empty black image to draw ball path
+
+    # This while loops through the whole video
+    while True:
+        frame_number = frame_number + 1         # update frame count
+        # print("frame no:", frame_number)
+        ret, frame = cap.read()                 # get the next frame
+        if not ret: break
     
 
-    # Post-process the mask with erosion and dilations
-    fg_mask = cv2.erode(fg_mask, None, iterations=3)
-    fg_mask = cv2.dilate(fg_mask, None, iterations=40)
-    fg_mask = cv2.erode(fg_mask, None, iterations=20)
-    fg_mask = cv2.dilate(fg_mask, None, iterations=1)
-    cv2.imshow("post processed mask",fg_mask)
-
-    # Find contours in the mask to detect moving objects
-    contours, _ = cv2.findContours(fg_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    # frame_histograms = []
-    index = 0
+        # Apply the background subtractor to get the foreground mask
+        fg_mask = bg_subtractor.apply(frame)
 
 
-    # Draw bounding boxes around detected objects
-    for contour in contours:
+
+        # # Post-process the mask with erosion and dilations
+        # fg_mask = cv2.erode(fg_mask, None, iterations=3)
+        # fg_mask = cv2.dilate(fg_mask, None, iterations=40)
+        # fg_mask = cv2.erode(fg_mask, None, iterations=20)
+        # fg_mask = cv2.dilate(fg_mask, None, iterations=1)
         
-        # Calculate the center of the contour
-        M = cv2.moments(contour)                 # Calculate the moments for center calculation 
-        if M["m00"] != 0:             
-            cX = int(M["m10"] / M["m00"])         # x coord for center
-            cY = int(M["m01"] / M["m00"])         # y coord for center
+
+        # Post-process the mask with erosion and dilations
+        fg_mask = cv2.erode(fg_mask, None, iterations=3)
+        fg_mask = cv2.dilate(fg_mask, None, iterations=40)
+        fg_mask = cv2.erode(fg_mask, None, iterations=20)
+        fg_mask = cv2.dilate(fg_mask, None, iterations=1)
+        if show : cv2.imshow("post processed mask",fg_mask)
+
+        # Find contours in the mask to detect moving objects
+        contours, _ = cv2.findContours(fg_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        # frame_histograms = []
+        index = 0
+
+
+        # Draw bounding boxes around detected objects
+        for contour in contours:
+            
+            # Calculate the center of the contour
+            M = cv2.moments(contour)                 # Calculate the moments for center calculation 
+            if M["m00"] != 0:             
+                cX = int(M["m10"] / M["m00"])         # x coord for center
+                cY = int(M["m01"] / M["m00"])         # y coord for center
+            
+            margin = 180                               # this is the margin on left and rigth where players are so can ignore movement here
+            if cX > margin and cX < video_width - margin:                             # check if the contour is outside the left and right margin
+                if cv2.contourArea(contour) > 2500 and cv2.contourArea(contour) < 10000:    # Adjust the area threshold as needed
+                    x, y, w, h = cv2.boundingRect(contour)                            # draw bounding rectangle around contour
+                    contour_image = crop_image(frame,x,y,w,h,)                        # create an image with just the contour
+                    contour_hist = get_hist(contour_image)                            # get a histogram for the contour
+                    player = is_player(contour_hist,p1_hist,p2_hist)                  # check if the contour hist is close to either player hist
+                    if not player :                                                   # not a player so should be ball
+                        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  # draw green box around ball
+                        cv2.circle(ball_path, (cX, cY), 5, (255, 0, 0), -1)           # mark the ball path image with contour center
+                        ball_locations.append((frame_number,(cX,cY)))                 # note the ball center
+                        # print("cX: ", cX, "cY: ", cY)
+                    else: 
+                        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)  # player detected so draw red box around contour
+
+
+        # Display the original frame and the result
+        if show: cv2.imshow('Original Video', frame)
         
-        margin = 180                               # this is the margin on left and rigth where players are so can ignore movement here
-        if cX > margin and cX < video_width - margin:                             # check if the contour is outside the left and right margin
-            if cv2.contourArea(contour) > 2500 and cv2.contourArea(contour) < 10000:    # Adjust the area threshold as needed
-                x, y, w, h = cv2.boundingRect(contour)                            # draw bounding rectangle around contour
-                contour_image = crop_image(frame,x,y,w,h,)                        # create an image with just the contour
-                contour_hist = get_hist(contour_image)                            # get a histogram for the contour
-                player = is_player(contour_hist,p1_hist,p2_hist)                  # check if the contour hist is close to either player hist
-                if not player :                                                   # not a player so should be ball
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  # draw green box around ball
-                    cv2.circle(ball_path, (cX, cY), 5, (255, 0, 0), -1)           # mark the ball path image with contour center
-                    ball_locations.append((frame_number,(cX,cY)))                 # note the ball center
-                    print("cX: ", cX, "cY: ", cY)
-                else: 
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)  # player detected so draw red box around contour
+
+        if show : 
+            if cv2.waitKey(30) & 0xFF == 27: break  # Press 'ESC' button to exit the while loop
 
 
-    # Display the original frame and the result
-    if show: cv2.imshow('Original Video', frame)
-    
-    cv2.waitKey(0)
+    cap.release()
+    cv2.destroyAllWindows()
 
-    if cv2.waitKey(30) & 0xFF == 27: break  # Press 'ESC' button to exit the while loop
+    filled_gaps_locations = fill_gaps(ball_locations) # locations of the ball for each frame
+    track_trajectory(filled_gaps_locations,video_width,True)   # analyse ball path and detect bounces
 
+    if show:
+        cv2.imshow("filled coords", draw_path(filled_gaps_locations))
+        print("\nPRESS 'ESC' TO QUIT")
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
-cap.release()
-cv2.destroyAllWindows()
-
-# print("ball locations size", len(ball_locations))
-filled_gaps_locations = fill_gaps(ball_locations) # locations of the ball for each frame
-# print(filled_gaps_locations)
-track_trajectory(filled_gaps_locations,video_width,True)   # analyse ball path and detect bounces
-
-cv2.imshow("filled coords", draw_path(filled_gaps_locations))
-
-
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+part3(True)
